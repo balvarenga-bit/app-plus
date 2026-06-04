@@ -82,9 +82,11 @@
         .btn-submit:active { transform: scale(0.98); }
 
         /* Historial Tarjetas Premium */
-        .history-item { background: white; border: none; padding: 16px; border-radius: 16px; margin-bottom: 14px; border-left: 5px solid #0f172a; box-shadow: 0 4px 12px rgba(15,23,42,0.03); }
-        .history-item.fichaje-type { border-left-color: #16a34a; }
-        .history-item.salida-type { border-left-color: #dc2626; }
+        .history-list-container { display: flex; flex-direction: column; gap: 12px; }
+        .history-item { background: white; border: none; padding: 16px; border-radius: 16px; border-left: 5px solid #0f172a; box-shadow: 0 4px 12px rgba(15,23,42,0.03); }
+        .history-item.fichaje-entrada { border-left-color: #16a34a; }
+        .history-item.fichaje-salida { border-left-color: #dc2626; }
+        .history-item.informe-tipo { border-left-color: #0284c7; }
         .history-meta { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
         .history-title { font-size: 15px; font-weight: 800; color: #0f172a; }
         .history-desc { font-size: 13px; color: #475569; margin-top: 6px; line-height: 1.4; }
@@ -113,7 +115,7 @@
 
         /* Barra de Navegación Flotante y Moderna */
         .bottom-nav { width: 100%; height: 75px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 800; color: #94a3b8; cursor: pointer; gap: 5px; width: 22%; transition: color 0.2s; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-weight: 800; color: #94a3b8; cursor: pointer; gap: 5px; width: 22%; transition: color 0.2s; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3px; }
         .nav-item i { font-size: 20px; transition: transform 0.2s; }
         .nav-item.active-nav { color: #0f172a; }
         .nav-item.active-nav i { transform: translateY(-2px); color: #0f172a; }
@@ -126,7 +128,7 @@
 
         <div id="screen-splash" class="screen active">
             <img src="https://grupoplus.com.ar/wp-content/uploads/2021/07/logo-grupo-plus.png" alt="Grupo Plus" class="logo-splash">
-            <p style="font-size: 14px; opacity: 0.9; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">INGRESANDO....</p>
+            <p style="font-size: 14px; opacity: 0.9; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #deff9a;">INGRESANDO....</p>
         </div>
 
         <div id="screen-login" class="screen">
@@ -189,8 +191,8 @@
                 </div>
 
                 <div id="tab-informe" class="tab-content">
-                    <h3 class="tab-title">📝 Control de Supervisores Limcorp</h3>
-                    <form id="form-limcorp" onsubmit="enviarReporte(event)">
+                    <h3 class="tab-title" id="titulo-dinamico-auditoria">📝 Control de Supervisores</h3>
+                    <form id="form-auditoria" onsubmit="enviarReporte(event)">
                         
                         <div class="form-group">
                             <label>Objetivo Auditado <span>*</span></label>
@@ -281,8 +283,10 @@
                 </div>
 
                 <div id="tab-historial" class="tab-content">
-                    <h3 class="tab-title">📋 Mi Actividad</h3>
-                    <div id="history-list"></div>
+                    <h3 class="tab-title">📋 Mi Actividad Reciente</h3>
+                    <div id="history-list" class="history-list-container">
+                        <p style="text-align: center; color: #64748b; font-size: 14px; margin-top: 20px;">No hay actividad registrada el día de hoy.</p>
+                    </div>
                 </div>
 
                 <div id="tab-perfil" class="tab-content">
@@ -376,25 +380,21 @@
         let dbSitios = [];
         let usuarioLogueado = null;
         let empresaSeleccionada = "";
-        let historialLocal = JSON.parse(localStorage.getItem('historial_recorridas')) || [];
-
+        let historialLocal = JSON.parse(localStorage.getItem('gp_historial')) || [];
         let canvas, ctx, dibujando = false;
 
+        // Construir matriz operativa original blindada
         const matrixItems = ["Pisos / Alfombra", "Paredes", "Escritorios / Muebles", "Limpieza Altura", "Baños / Varios", "Basura", "Cocheras", "Subsuelos", "Ascensores"];
         document.getElementById('matrix-body').innerHTML = matrixItems.map((item, index) => `
             <tr>
                 <td class="matrix-item-name">${item}</td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="C" required></td>
+                <td style="text-align:center"><input type="radio" name="item_${index}" value="C" checked required></td>
                 <td style="text-align:center"><input type="radio" name="item_${index}" value="NC"></td>
                 <td style="text-align:center"><input type="radio" name="item_${index}" value="N/A"></td>
             </tr>
         `).join('');
 
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                changeScreen('screen-login');
-            }, 2000);
-            
             cargarDatosEnSegundoPlano();
             setInterval(actualizarRelojFichaje, 1000);
             actualizarRelojFichaje();
@@ -417,157 +417,161 @@
         }
 
         function cargarDatosEnSegundoPlano() {
+            // Respaldos de contingencia por caché local
+            dbSupervisores = JSON.parse(localStorage.getItem('gp_sups_cache')) || [];
+            dbSitios = JSON.parse(localStorage.getItem('gp_sitios_cache')) || [];
+            
             fetch(`${WEB_APP_URL}?action=getSupervisores`)
-            .then(res => res.json()).then(dataSups => {
+            .then(res => res.json())
+            .then(dataSups => {
                 dbSupervisores = dataSups;
+                localStorage.setItem('gp_sups_cache', JSON.stringify(dataSups));
                 return fetch(`${WEB_APP_URL}?action=getSitios`);
             })
-            .then(res => res.json()).then(dataSitios => {
+            .then(res => res.json())
+            .then(dataSitios => {
                 dbSitios = dataSitios;
-                if(usuarioLogueado) { actualizarListasSitios(); }
+                localStorage.setItem('gp_sitios_cache', JSON.stringify(dataSitios));
+                changeScreen('screen-login');
             })
-            .catch(err => console.log("Carga de fondo..."));
+            .catch(err => {
+                console.log("Modo offline o problemas de red. Usando caché.");
+                if (dbSupervisores.length > 0) {
+                    changeScreen('screen-login');
+                } else {
+                    setTimeout(cargarDatosEnSegundoPlano, 4000);
+                }
+            });
         }
 
         function evaluarPin(pin) {
             if (pin.length === 4) {
-                if (dbSupervisores.length === 0) {
-                    alert("⏱️ Conexión lenta: El sistema se está sincronizando con Google Sheets, aguarde 3 segundos y vuelva a ingresar el PIN.");
+                const user = dbSupervisores.find(u => u.pin.toString().trim() === pin.toString().trim());
+                if (user) {
+                    usuarioLogueado = user;
+                    document.getElementById('login-error').style.display = "none";
                     document.getElementById('input-pin').value = "";
-                    cargarDatosEnSegundoPlano();
-                    return;
+                    changeScreen('screen-empresas');
+                } else {
+                    document.getElementById('login-error').style.display = "block";
+                    document.getElementById('input-pin').value = "";
                 }
-                const user = dbSupervisores.find(u => u.pin === pin);
-                if (user) { usuarioLogueado = user; changeScreen('screen-empresas'); }
-                else { document.getElementById('login-error').style.display = "block"; document.getElementById('input-pin').value = ""; }
             }
         }
 
         function selectEmpresa(empresa) {
             empresaSeleccionada = empresa;
-            setGreeting();
-            document.getElementById('sup-name').innerText = `${usuarioLogueado.nombre} • ${empresa}`;
-            document.getElementById('profile-user').innerText = usuarioLogueado.nombre;
-            document.getElementById('profile-company').innerText = `Rol: ${usuarioLogueado.rol} | ${empresa}`;
             
-            const isAdm = usuarioLogueado.rol.toLowerCase().trim() === "admin";
-            document.getElementById('btn-toggle-admin').style.display = isAdm ? "flex" : "none";
-            document.getElementById('panel-admin').style.display = "none";
-            document.getElementById('cv-box').style.display = "none";
-
-            actualizarListasSitios();
-            cargarHojaVidaYFoto();
-            changeScreen('screen-home');
-            switchTab('fichaje');
-        }
-
-        function cambiarFotoPerfil(input) {
-            if (input.files && input.files[0]) {
-                const lector = new FileReader();
-                lector.onload = function(e) {
-                    const base64 = e.target.result;
-                    document.getElementById('avatar-default').style.display = 'none';
-                    const img = document.getElementById('avatar-img');
-                    img.src = base64;
-                    img.style.display = 'block';
-                    localStorage.setItem(`avatar_${usuarioLogueado.nombre}`, base64);
-                }
-                lector.readAsDataURL(input.files[0]);
+            // Renderizado de saludos y marcas horarias dinámicas corporativas
+            const h = new Date().getHours();
+            let saludo = "Buenos días,";
+            if(h >= 12 && h < 20) saludo = "Buenas tardes,";
+            if(h >= 20 || h < 6) saludo = "Buenas noches,";
+            
+            document.getElementById('greeting').innerText = saludo;
+            document.getElementById('sup-name').innerText = `${usuarioLogueado.nombre} • ${empresa}`;
+            
+            // Cargar datos en vista Perfil
+            document.getElementById('profile-user').innerText = usuarioLogueado.nombre;
+            document.getElementById('profile-company').innerText = `${empresa} (${usuarioLogueado.rol || 'Supervisor'})`;
+            
+            // Mostrar Panel Admin si corresponde
+            if (usuarioLogueado.rol && usuarioLogueado.rol.toLowerCase() === 'admin') {
+                document.getElementById('btn-toggle-admin').style.display = "flex";
+            } else {
+                document.getElementById('btn-toggle-admin').style.display = "none";
             }
-        }
 
-        function guardarHojaVida() {
-            const datos = {
-                legajo: document.getElementById('cv-legajo').value,
-                telefono: document.getElementById('cv-telefono').value,
-                domicilio: document.getElementById('cv-domicilio').value
-            };
-            localStorage.setItem(`cv_${usuarioLogueado.nombre}`, JSON.stringify(datos));
-            alert("✅ Hoja de Vida guardada con éxito.");
-            toggleSeccion('cv-box', 'arrow-cv'); // Se cierra al guardar de forma estética
-        }
+            // Cambiar título de auditoría dinámicamente según empresa
+            document.getElementById('titulo-dinamico-auditoria').innerText = `📝 Control de Supervisores ${empresa}`;
 
-        function cargarHojaVidaYFoto() {
+            // Cargar datos guardados en Hoja de Vida (LocalStorage vinculado al supervisor)
+            const cvGuardado = JSON.parse(localStorage.getItem(`cv_${usuarioLogueado.nombre}`)) || {};
+            document.getElementById('cv-legajo').value = cvGuardado.legajo || "";
+            document.getElementById('cv-telefono').value = cvGuardado.telefono || "";
+            document.getElementById('cv-domicilio').value = cvGuardado.domicilio || "";
+
+            // Cargar foto de perfil si existiese
             const fotoGuardada = localStorage.getItem(`avatar_${usuarioLogueado.nombre}`);
             if (fotoGuardada) {
-                document.getElementById('avatar-default').style.display = 'none';
-                const img = document.getElementById('avatar-img');
-                img.src = fotoGuardada;
-                img.style.display = 'block';
+                document.getElementById('avatar-default').style.display = "none";
+                document.getElementById('avatar-img').src = fotoGuardada;
+                document.getElementById('avatar-img').style.display = "block";
             } else {
-                document.getElementById('avatar-default').style.display = 'flex';
-                document.getElementById('avatar-img').style.display = 'none';
+                document.getElementById('avatar-default').style.display = "flex";
+                document.getElementById('avatar-img').style.display = "none";
             }
 
-            const cvGuardado = JSON.parse(localStorage.getItem(`cv_${usuarioLogueado.nombre}`));
-            document.getElementById('cv-legajo').value = cvGuardado?.legajo || "";
-            document.getElementById('cv-telefono').value = cvGuardado?.telefono || "";
-            document.getElementById('cv-domicilio').value = cvGuardado?.domicilio || "";
+            // Filtrar los selectores de sitios
+            rebuildSelects();
+            renderHistorial();
+            changeScreen('screen-home');
         }
 
-        function toggleSeccion(idBox, idArrow) {
-            const box = document.getElementById(idBox);
-            const arrow = document.getElementById(idArrow);
-            if(box.style.display === "block") {
-                box.style.display = "none";
-                arrow.style.transform = "rotate(0deg)";
-            } else {
-                box.style.display = "block";
-                arrow.style.transform = "rotate(180deg)";
-            }
-        }
-
-        function filtrarSitios(modulo) {
-            const query = document.getElementById(`search-${modulo}`).value.toLowerCase();
-            const select = modulo === 'fichaje' ? document.getElementById('fichaje-sitio') : document.getElementById('field-sitio');
-            const filtrados = dbSitios.filter(s => s.empresa.toLowerCase() === empresaSeleccionada.toLowerCase() && s.sitio.toLowerCase().includes(query));
-            
-            select.innerHTML = '<option value="">Resultados...</option>';
-            filtrados.forEach(s => { select.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`; });
-        }
-
-        function actualizarListasSitios() {
+        function rebuildSelects() {
+            const filtrados = dbSitios.filter(s => s.empresa.toLowerCase() === empresaSeleccionada.toLowerCase());
             const selects = [document.getElementById('fichaje-sitio'), document.getElementById('field-sitio')];
-            if(dbSitios.length === 0) return;
-            const base = dbSitios.filter(s => s.empresa.toLowerCase() === empresaSeleccionada.toLowerCase());
+            
             selects.forEach(sel => {
-                sel.innerHTML = '<option value="">Seleccione Objetivo...</option>';
-                base.forEach(s => { sel.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`; });
+                sel.innerHTML = '<option value="">Seleccione Sitio...</option>';
+                filtrados.forEach(s => {
+                    sel.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`;
+                });
             });
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-            document.getElementById('tab-' + tabId).classList.add('active-tab');
-            document.getElementById('btn-tab-' + tabId).classList.add('active-nav');
+        function filtrarSitios(tipo) {
+            const busqueda = document.getElementById(`search-${tipo}`).value.toLowerCase();
+            const select = document.getElementById(tipo === 'fichaje' ? 'fichaje-sitio' : 'field-sitio');
+            const filtrados = dbSitios.filter(s => s.empresa.toLowerCase() === empresaSeleccionada.toLowerCase() && s.sitio.toLowerCase().includes(busqueda));
             
-            if(tabId === 'historial') renderHistorial();
-            if(tabId === 'informe') {
-                setTimeout(initFirmaCanvas, 250);
-            }
+            select.innerHTML = '<option value="">Seleccione Sitio...</option>';
+            filtrados.forEach(s => {
+                select.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`;
+            });
         }
 
         function registrarFichaje(tipo) {
             const sitio = document.getElementById('fichaje-sitio').value;
-            if (!sitio) { alert("Seleccione objetivo."); return; }
-            const obs = document.getElementById('fichaje-observaciones').value;
+            if(!sitio) return alert("Por favor, seleccione un objetivo.");
+            
+            const horaActual = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
             const payload = {
-                tipo_registro: "fichaje", supervisor: `${usuarioLogueado.nombre} (${empresaSeleccionada})`,
-                sitio, accion: tipo, hora: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), observacionesFichaje: obs
+                tipo_registro: "fichaje",
+                supervisor: `${usuarioLogueado.nombre} (${empresaSeleccionada})`,
+                sitio,
+                accion: tipo,
+                hora: horaActual,
+                observacionesFichaje: document.getElementById('fichaje-observaciones').value
             };
+
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert(`✅ ${tipo} registrado.`);
-                guardarHistorial(tipo, `${tipo} en: ${sitio}`, obs || "Sin novedades.");
+                alert(`✅ ${tipo} registrado con éxito.`);
+                
+                // Guardar en historial local
+                historialLocal.unshift({
+                    tipo: `fichaje-${tipo.toLowerCase()}`,
+                    titulo: `${tipo}: ${sitio}`,
+                    meta: `${horaActual} • ${empresaSeleccionada}`,
+                    desc: document.getElementById('fichaje-observaciones').value || "Sin observaciones adicionales."
+                });
+                localStorage.setItem('gp_historial', JSON.stringify(historialLocal));
+                renderHistorial();
+
                 document.getElementById('fichaje-observaciones').value = "";
-                if(tipo === 'Entrada') switchTab('informe');
-            });
+                if(tipo === 'Entrada') {
+                    document.getElementById('field-sitio').value = sitio;
+                    document.getElementById('field-horaIngreso').value = new Date().toTimeString().slice(0,5);
+                    switchTab('informe');
+                }
+            })
+            .catch(() => alert("Error al registrar fichaje en el servidor. Revise su conexión."));
         }
 
         function validarFotos(input) {
             if (input.files.length > 5) {
-                alert("⚠️ Solo se permiten hasta un máximo de 5 fotos por informe.");
+                alert("Sólo puede subir un máximo de 5 fotografías como evidencia.");
                 input.value = "";
                 document.getElementById('photo-status').innerText = "0 de 5 fotos seleccionadas";
             } else {
@@ -579,79 +583,37 @@
             canvas = document.getElementById('signature-canvas');
             if(!canvas) return;
             ctx = canvas.getContext('2d');
-            
-            const contenedor = canvas.parentElement;
-            canvas.width = contenedor.clientWidth;
+            canvas.width = canvas.parentElement.clientWidth;
             canvas.height = 180; 
-            
-            ctx.strokeStyle = "#0f172a";
-            ctx.lineWidth = 3;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
+            ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.lineJoin = "round";
 
             function obtenerPosTouch(e) {
                 const rect = canvas.getBoundingClientRect();
-                const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
-                return {
-                    x: clienteX - rect.left,
-                    y: clienteY - rect.top
-                };
+                const clX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clX - rect.left, y: clY - rect.top };
             }
-
-            canvas.addEventListener('touchstart', function(e) {
-                dibujando = true;
-                const pos = obtenerPosTouch(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-            }, { passive: false });
-
-            canvas.addEventListener('touchmove', function(e) {
-                if (!dibujando) return;
-                e.preventDefault(); 
-                const pos = obtenerPosTouch(e);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-            }, { passive: false });
-
-            canvas.addEventListener('touchend', function() {
-                dibujando = false;
-            });
-
-            canvas.addEventListener('mousedown', function(e) {
-                dibujando = true;
-                const pos = obtenerPosTouch(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-            });
-            canvas.addEventListener('mousemove', function(e) {
-                if (dibujando) {
-                    const pos = obtenerPosTouch(e);
-                    ctx.lineTo(pos.x, pos.y);
-                    ctx.stroke();
-                }
-            });
-            window.addEventListener('mouseup', function() {
-                dibujando = false;
-            });
+            canvas.addEventListener('touchstart', function(e) { dibujando = true; const pos = obtenerPosTouch(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }, { passive: false });
+            canvas.addEventListener('touchmove', function(e) { if (!dibujando) return; e.preventDefault(); const pos = obtenerPosTouch(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }, { passive: false });
+            canvas.addEventListener('touchend', function() { dibujando = false; });
+            canvas.addEventListener('mousedown', function(e) { dibujando = true; const pos = obtenerPosTouch(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); });
+            canvas.addEventListener('mousemove', function(e) { if (dibujando) { const pos = obtenerPosTouch(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); } });
+            window.addEventListener('mouseup', function() { dibujando = false; });
         }
 
-        function limpiarFirma() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        function limpiarFirma() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
         function enviarReporte(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-enviar');
-            btn.innerText = "Enviando Control..."; btn.disabled = true;
+            btn.innerText = "ENVIANDO REPORTE..."; btn.disabled = true;
 
-            const firmaBase64 = canvas.toDataURL();
-
+            const sitioSel = document.getElementById('field-sitio').value;
             const payload = {
                 tipo_registro: "informe",
-                supervisor: usuarioLogueado.nombre,
+                supervisor: `${usuarioLogueado.nombre} (${empresaSeleccionada})`,
                 contacto: document.getElementById('field-contacto').value,
-                sitio: document.getElementById('field-sitio').value,
+                sitio: sitioSel,
                 horaIngreso: document.getElementById('field-horaIngreso').value,
                 horaEgreso: document.getElementById('field-horaEgreso').value,
                 estadoMateriales: document.getElementById('field-estadoMateriales').value,
@@ -659,8 +621,7 @@
                 estadoMaquinas: document.getElementById('field-estadoMaquinas').value,
                 estadoUniforme: document.getElementById('field-estadoUniforme').value,
                 novedades: document.getElementById('field-novedades').value,
-                serviciosComplementarios: document.getElementById('field-serviciosComplementarios').value,
-                firmaCliente: firmaBase64
+                serviciosComplementarios: document.getElementById('field-serviciosComplementarios').value
             };
 
             matrixItems.forEach((_, i) => {
@@ -669,68 +630,117 @@
 
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert("✅ Control de Supervisor enviado con éxito.");
-                guardarHistorial('Informe', `Control: ${payload.sitio}`, payload.observaciones);
-                document.getElementById('form-limcorp').reset();
-                limpiarFirma();
+                alert("✅ Informe de Control Guardado con éxito.");
+                
+                historialLocal.unshift({
+                    tipo: "informe-tipo",
+                    titulo: `Auditoría: ${sitioSel}`,
+                    meta: `${payload.horaIngreso} a ${payload.horaEgreso} • ${empresaSeleccionada}`,
+                    desc: payload.observaciones
+                });
+                localStorage.setItem('gp_historial', JSON.stringify(historialLocal));
+                renderHistorial();
+
+                document.getElementById('form-auditoria').reset();
                 document.getElementById('photo-status').innerText = "0 de 5 fotos seleccionadas";
-                switchTab('historial');
-            }).finally(() => { btn.innerText = "ENVIAR CONTROL FINAL"; btn.disabled = false; });
+                limpiarFirma();
+                switchTab('fichaje');
+            })
+            .catch(() => alert("Error de comunicación con la base de datos."))
+            .finally(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ENVIAR CONTROL FINAL'; btn.disabled = false; });
+        }
+
+        function renderHistorial() {
+            const container = document.getElementById('history-list');
+            if(historialLocal.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: #64748b; font-size: 14px; margin-top: 20px;">No hay actividad registrada el día de hoy.</p>`;
+                return;
+            }
+            container.innerHTML = historialLocal.map(h => `
+                <div class="history-item ${h.tipo}">
+                    <div class="history-meta"><span>${h.tipo.replace('-',' ').toUpperCase()}</span><span>${h.meta}</span></div>
+                    <div class="history-title">${h.titulo}</div>
+                    <div class="history-desc">${h.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function cambiarFotoPerfil(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatar-default').style.display = "none";
+                    document.getElementById('avatar-img').src = e.target.result;
+                    document.getElementById('avatar-img').style.display = "block";
+                    localStorage.setItem(`avatar_${usuarioLogueado.nombre}`, e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function guardarHojaVida() {
+            const data = {
+                legajo: document.getElementById('cv-legajo').value,
+                telefono: document.getElementById('cv-telefono').value,
+                domicilio: document.getElementById('cv-domicilio').value
+            };
+            localStorage.setItem(`cv_${usuarioLogueado.nombre}`, JSON.stringify(data));
+            alert("💾 Datos personales actualizados localmente en su Hoja de Vida.");
+        }
+
+        function toggleSeccion(boxId, arrowId) {
+            const box = document.getElementById(boxId);
+            const arrow = document.getElementById(arrowId);
+            if(box.style.display === "block") {
+                box.style.display = "none";
+                arrow.className = "fa-solid fa-chevron-down";
+            } else {
+                box.style.display = "block";
+                arrow.className = "fa-solid fa-chevron-up";
+            }
         }
 
         function addSupervisorAdmin() {
             const nombre = document.getElementById('adm-sup-nombre').value;
             const pin = document.getElementById('adm-sup-pin').value;
             const rol = document.getElementById('adm-sup-rol').value;
-            if(!nombre || !pin) { alert("Complete los datos."); return; }
-            const payload = { tipo_registro: "nuevo_supervisor", nombre, pin, rol };
+            if(!nombre || !pin) return alert("Complete los campos de Supervisor.");
+
+            const payload = { tipo_registro: "alta_supervisor", nombre, pin, rol };
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert("✅ Supervisor guardado con éxito.");
-                document.getElementById('adm-sup-nombre').value = ""; document.getElementById('adm-sup-pin').value = "";
-                cargarDatosEnSegundoPlano();
-                toggleSeccion('panel-admin', 'arrow-adm');
+                alert("✅ Supervisor dado de alta en servidor. Reinicie la App para actualizar.");
+                document.getElementById('adm-sup-nombre').value = "";
+                document.getElementById('adm-sup-pin').value = "";
             });
         }
 
         function addSitioAdmin() {
             const sitio = document.getElementById('adm-sitio-nombre').value;
             const empresa = document.getElementById('adm-sitio-empresa').value;
-            if(!sitio) { alert("Escriba el nombre del objetivo."); return; }
-            const payload = { tipo_registro: "nuevo_sitio", sitio, empresa };
+            if(!sitio) return alert("Escriba el nombre del objetivo.");
+
+            const payload = { tipo_registro: "alta_objetivo", sitio, empresa };
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert("✅ Objetivo guardado con éxito.");
+                alert("✅ Objetivo guardado en servidor. Reinicie para actualizar.");
                 document.getElementById('adm-sitio-nombre').value = "";
-                cargarDatosEnSegundoPlano();
-                toggleSeccion('panel-admin', 'arrow-adm');
             });
         }
 
-        function guardarHistorial(tipo, titulo, desc) {
-            const reg = { tipo, titulo, desc, hora: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), fecha: new Date().toLocaleDateString() };
-            historialLocal.unshift(reg);
-            localStorage.setItem('historial_recorridas', JSON.stringify(historialLocal));
-        }
-
-        function renderHistorial() {
-            const list = document.getElementById('history-list');
-            list.innerHTML = historialLocal.length ? "" : '<div style="text-align:center; padding:50px; color:#94a3b8;">Sin actividad reciente.</div>';
-            historialLocal.slice(0, 10).forEach(i => {
-                const cls = i.tipo === 'Entrada' ? 'fichaje-type' : (i.tipo === 'Salida' ? 'salida-type' : '');
-                list.innerHTML += `<div class="history-item ${cls}"><div class="history-meta"><span>📅 ${i.fecha}</span><span>⏱️ ${i.hora}</span></div><div class="history-title">${i.titulo}</div><div class="history-desc">${i.desc}</div></div>`;
-            });
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active-tab');
+            document.getElementById('btn-tab-' + tabId).classList.add('active-nav');
+            
+            if(tabId === 'informe') setTimeout(initFirmaCanvas, 200);
         }
 
         function changeScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-        }
-
-        function setGreeting() {
-            const h = new Date().getHours();
-            const g = h < 12 ? "Buenos días" : (h < 20 ? "Buenas tardes" : "Buenas noches");
-            document.getElementById('greeting').innerText = g + " 👋";
         }
     </script>
 </body>
