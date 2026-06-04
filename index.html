@@ -455,7 +455,6 @@
             document.getElementById('panel-admin').style.display = "none";
             document.getElementById('cv-box').style.display = "none";
 
-            // Reiniciar rotación de flechas por estética al entrar
             document.getElementById('arrow-cv').style.transform = "rotate(0deg)";
             document.getElementById('arrow-adm').style.transform = "rotate(0deg)";
 
@@ -475,9 +474,8 @@
                     img.src = base64;
                     img.style.display = 'block';
                     
-                    // Clave blindada basada únicamente en el nombre real del supervisor
                     const claveLimpia = "avatar_sup_" + usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
-                    localStorage.setItem(claveLimpia, base64);
+                    localStorage.setItem(claveLinter, base64); // Cambiado para asegurar coincidencia
                 }
                 lector.readAsDataURL(input.files[0]);
             }
@@ -490,7 +488,6 @@
                 telefono: document.getElementById('cv-telefono').value,
                 domicilio: document.getElementById('cv-domicilio').value
             };
-            // Clave blindada basada únicamente en el nombre real del supervisor
             const claveLimpia = "cv_sup_" + usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
             localStorage.setItem(claveLimpia, JSON.stringify(datos));
             
@@ -501,10 +498,7 @@
         function cargarHojaVidaYFoto() {
             if (!usuarioLogueado) return;
             
-            // Generar identificadores limpios e inmunes a actualizaciones
             const idLimpio = usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
-            const claveFoto = "avatar_sup_" + idLinter; // Se autocompleta con idLimpio de forma segura
-            const claveCV = "cv_sup_" + idLimpio;
 
             const fotoGuardada = localStorage.getItem("avatar_sup_" + idLimpio);
             if (fotoGuardada) {
