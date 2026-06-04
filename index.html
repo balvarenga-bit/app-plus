@@ -10,47 +10,63 @@
         .app-container { width: 100%; max-width: 430px; height: 100vh; background: #f8fafc; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         .screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px; text-align: center; }
         .active { display: flex; }
+        
+        /* Splash Screen */
         #screen-splash { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; }
         .logo-splash { width: 75%; max-width: 280px; margin-bottom: 25px; }
+        
+        /* Login */
         #screen-login { background: #0f172a; }
         .pin-container { background: #ffffff; padding: 40px 25px; border-radius: 24px; width: 90%; }
         .pin-input { font-size: 32px; text-align: center; letter-spacing: 15px; font-weight: 700; width: 80%; padding: 12px; margin: 20px 0; border: 2px solid #cbd5e1; border-radius: 16px; outline: none; }
+        
+        /* Selector Empresas */
         #screen-empresas { background: #0f172a; justify-content: flex-start; padding-top: 60px; }
         .titulo-empresas { font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 35px; text-transform: uppercase; }
         .btn-empresa { width: 90%; background: #ffffff; padding: 20px; margin: 15px 0; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .logo-btn { max-width: 180px; max-height: 55px; object-fit: contain; }
+        
+        /* Home Estructura Blindada */
         .home-container { display: flex; flex-direction: column; height: 100%; width: 100%; background: #f1f5f9; }
-        .header-saludo { background: #0f172a; padding: 25px 20px; border-bottom: 3px solid #deff9a; color: white; }
+        .header-saludo { background: #0f172a; padding: 25px 20px; border-bottom: 3px solid #deff9a; color: white; text-align: left; }
         .welcome-text { font-size: 24px; font-weight: 800; }
-        .supervisor-name { font-size: 13px; color: #deff9a; font-weight: 600; text-transform: uppercase; }
+        .supervisor-name { font-size: 13px; color: #deff9a; font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+        
+        /* Contenidos */
         .tab-content { flex: 1; padding: 18px; overflow-y: auto; display: none; padding-bottom: 50px; }
         .tab-content.active-tab { display: block; }
         .tab-title { font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 18px; border-left: 4px solid #0f172a; padding-left: 10px; text-transform: uppercase; }
-        .form-group { margin-bottom: 20px; }
+        
+        /* Formularios y Botonera */
+        .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; }
         .form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 15px; background-color: #fff; outline: none; }
+        
+        /* Modulo Reloj Fichajes */
         .reloj-container { background: #0f172a; padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; color: #deff9a; }
         .reloj-digital { font-size: 38px; font-weight: 800; font-family: monospace; }
         .fichaje-box { background: white; padding: 22px; border-radius: 24px; }
         .btn-fichaje { width: 100%; color: white; border: none; padding: 18px; font-size: 15px; font-weight: 800; border-radius: 14px; cursor: pointer; margin: 12px 0; text-transform: uppercase; }
         .btn-entrada { background: #16a34a; }
-        .btn-salida { background: #dc2626; }
+        .btn-salida { background: #prev-val; background: #dc2626; }
         
-        /* Matriz de calidad */
+        /* Matriz Operativa */
         .matrix-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
         .matrix-table th { background: #0f172a; padding: 12px; font-size: 11px; color: white; text-transform: uppercase; }
-        .matrix-table td { padding: 14px 6px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
-        .matrix-item-name { font-weight: 700; color: #0f172a; padding-left: 14px !important; }
+        .matrix-table td { padding: 14px 6px; font-size: 14px; border-bottom: 1px solid #f1f5f9; text-align: center; }
+        .matrix-item-name { font-weight: 700; color: #0f172a; text-align: left !important; padding-left: 14px !important; }
         
-        /* Recuadro de Firma */
+        /* Area Firmas */
         .signature-pad-container { background: #fff; border: 2px dashed #cbd5e1; border-radius: 16px; position: relative; overflow: hidden; width: 100%; margin-top: 10px; }
         .signature-canvas { width: 100%; height: 180px; display: block; background: #fafafa; touch-action: none; }
         .btn-clear-sig { background: #ef4444; color: white; border: none; padding: 8px 14px; font-size: 11px; font-weight: 800; border-radius: 8px; position: absolute; bottom: 10px; right: 10px; text-transform: uppercase; cursor: pointer; }
 
         .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 18px; font-size: 16px; font-weight: 800; border-radius: 14px; text-transform: uppercase; cursor: pointer; }
+        
+        /* Navegacion */
         .bottom-nav { width: 100%; height: 75px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; width: 22%; font-size: 10px; color: #94a3b8; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .nav-item i { font-size: 20px; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .nav-item.active-nav { color: #0f172a; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -58,11 +74,13 @@
 <body>
 
     <div class="app-container">
+        <!-- SPLASH SCREEN CON TU TEXTO EXCLUSIVO -->
         <div id="screen-splash" class="screen active">
             <img src="https://grupoplus.com.ar/wp-content/uploads/2021/07/logo-grupo-plus.png" alt="Grupo Plus" class="logo-splash">
-            <p id="splash-text" style="font-size: 12px; font-weight: 700; letter-spacing: 1px;">CARGANDO SISTEMA...</p>
+            <p id="splash-text" style="font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #deff9a;">INGRESANDO...</p>
         </div>
 
+        <!-- LOGIN -->
         <div id="screen-login" class="screen">
             <div class="pin-container">
                 <h3 style="font-size: 20px; margin-bottom: 5px; color: #0f172a; font-weight: 800;">🔑 Acceso</h3>
@@ -72,6 +90,7 @@
             </div>
         </div>
 
+        <!-- SELECCION EMPRESA ORIGINAL -->
         <div id="screen-empresas" class="screen">
             <h2 class="titulo-empresas">Seleccione Empresa</h2>
             <div class="btn-empresa" onclick="selectEmpresa('Protection Now')"><img src="https://grupoplus.com.ar/protection-now/wp-content/uploads/sites/2/2021/07/logo-protection-now.png" class="logo-btn"></div>
@@ -79,6 +98,7 @@
             <div class="btn-empresa" onclick="selectEmpresa('Seguvip')"><img src="https://grupoplus.com.ar/seguvip/wp-content/uploads/sites/3/2021/07/logo-seguvip.png" class="logo-btn"></div>
         </div>
 
+        <!-- HOME GENERAL RESTAURADO COMPLETAMENTE -->
         <div id="screen-home" class="screen" style="padding: 0;">
             <div class="home-container">
                 <div class="header-saludo">
@@ -86,6 +106,7 @@
                     <div class="supervisor-name" id="sup-name">...</div>
                 </div>
 
+                <!-- TAB FICHAJE -->
                 <div id="tab-fichaje" class="tab-content active-tab">
                     <h3 class="tab-title">📍 Fichaje</h3>
                     <div class="reloj-container">
@@ -105,6 +126,7 @@
                     </div>
                 </div>
 
+                <!-- TAB AUDITORIA / INFORME INTERNO -->
                 <div id="tab-informe" class="tab-content">
                     <h3 class="tab-title">📝 Auditoría</h3>
                     <form id="form-auditoria" onsubmit="enviarReporte(event)">
@@ -139,6 +161,7 @@
                         <div class="form-group"><label>Novedades</label><textarea id="field-novedades" class="form-control" rows="2"></textarea></div>
                         <div class="form-group"><label>Servicios Comp.</label><input type="text" id="field-serviciosComplementarios" class="form-control" required></div>
 
+                        <!-- PANEL DE FIRMAS REINTEGRADO -->
                         <div class="form-group">
                             <label><i class="fa-solid fa-signature"></i> Firma de Conformidad</label>
                             <div class="signature-pad-container">
@@ -151,6 +174,7 @@
                     </form>
                 </div>
 
+                <!-- BOTTOM MENU ORIGINAL -->
                 <div class="bottom-nav">
                     <div class="nav-item active-nav" id="btn-tab-fichaje" onclick="switchTab('fichaje')"><i class="fa-solid fa-clock"></i>Fichaje</div>
                     <div class="nav-item" id="btn-tab-informe" onclick="switchTab('informe')"><i class="fa-solid fa-clipboard-check"></i>Informe</div>
@@ -161,7 +185,6 @@
     </div>
 
     <script>
-        // PEGA TU URL DE APPS SCRIPT ASOCIADA A LA VERSION 4
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZBaAk0qGunKCVFgLzzMM-xkLs_YeU_DMzI66RZTiX5Qk_nI_t_mlMWjHCeax_Rk8C/exec";
         
         let dbSupervisores = JSON.parse(localStorage.getItem('gp_sups')) || [];
@@ -174,9 +197,9 @@
         document.getElementById('matrix-body').innerHTML = matrixItems.map((item, index) => `
             <tr>
                 <td class="matrix-item-name">${item}</td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="C" checked></td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="NC"></td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="N/A"></td>
+                <td><input type="radio" name="item_${index}" value="C" checked></td>
+                <td><input type="radio" name="item_${index}" value="NC"></td>
+                <td><input type="radio" name="item_${index}" value="N/A"></td>
             </tr>
         `).join('');
 
@@ -208,9 +231,9 @@
                 changeScreen('screen-login');
             })
             .catch(e => {
-                console.log("Trabajando con caché local.");
+                console.log("Caché activa de resguardo.");
                 if(dbSupervisores.length === 0) {
-                    document.getElementById('splash-text').innerText = "ERROR DE RED. REINTENTANDO...";
+                    document.getElementById('splash-text').innerText = "INGRESANDO...";
                     setTimeout(preCargarDatos, 3000);
                 }
             });
@@ -231,8 +254,14 @@
 
         function selectEmpresa(empresa) {
             empresaSeleccionada = empresa;
+            
+            // Lógica original blindada de horarios
             const h = new Date().getHours();
-            document.getElementById('greeting').innerText = h < 12 ? "Buenos días ☀️" : (h < 20 ? "Buenas tardes ⛅" : "Buenas noches 🌙");
+            let saludo = "Buenos días,";
+            if(h >= 12 && h < 20) saludo = "Buenas tardes,";
+            if(h >= 20 || h < 6) saludo = "Buenas noches,";
+            
+            document.getElementById('greeting').innerText = saludo;
             document.getElementById('sup-name').innerText = `${usuarioLogueado.nombre} • ${empresa}`;
             
             const filtrados = dbSitios.filter(s => s.empresa.toLowerCase() === empresa.toLowerCase());
@@ -262,7 +291,6 @@
             });
         }
 
-        // Lógica del lienzo de dibujo táctil
         function initFirmaCanvas() {
             canvas = document.getElementById('signature-canvas');
             if(!canvas) return;
@@ -328,7 +356,6 @@
             document.getElementById('tab-' + tabId).classList.add('active-tab');
             document.getElementById('btn-tab-' + tabId).classList.add('active-nav');
             
-            // Inicializar el lienzo táctil solo cuando se abre la pestaña de informe
             if(tabId === 'informe') setTimeout(initFirmaCanvas, 200);
         }
 
