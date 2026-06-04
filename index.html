@@ -89,22 +89,20 @@
         .history-title { font-size: 15px; font-weight: 800; color: #0f172a; }
         .history-desc { font-size: 13px; color: #475569; margin-top: 6px; line-height: 1.4; }
 
-        /* Tarjeta Perfil & Hoja de Vida Estilizada */
+        /* Tarjeta Perfil Estilizada */
         .profile-card { background: white; border: none; padding: 25px 20px; border-radius: 24px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); position: relative; }
         .profile-avatar-container { position: relative; width: 85px; height: 85px; margin: 0 auto 12px auto; }
         .profile-avatar { width: 100%; height: 100%; background: #0f172a; color: #deff9a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; box-shadow: 0 4px 10px rgba(15,23,42,0.2); object-fit: cover; border: 2px solid #deff9a; }
         .btn-edit-avatar { position: absolute; bottom: 0; right: 0; background: #0f172a; color: white; border: 1px solid #deff9a; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         
-        /* Contenedor Hoja de Vida */
-        .cv-box { background: white; border: none; padding: 22px; border-radius: 24px; margin-bottom: 25px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); text-align: left; }
-        .cv-title { font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .stat-box { background: #f8fafc; padding: 14px; border-radius: 14px; border: 1px solid #e2e8f0; }
-        .stat-num { font-size: 22px; font-weight: 800; color: #0f172a; }
-        .stat-lbl { font-size: 10px; color: #64748b; font-weight: 800; text-transform: uppercase; margin-top: 2px; }
+        /* Botones Desplegables Estéticos */
+        .btn-toggle-section { width: 100%; background: white; border: 1px solid #e2e8f0; padding: 16px; border-radius: 16px; font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         
-        /* Panel Admin */
+        /* Contenedor Hoja de Vida (Inicialmente Oculto) */
+        .cv-box { display: none; background: white; border: none; padding: 22px; border-radius: 24px; margin-bottom: 25px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); text-align: left; }
+        .cv-title { font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        
+        /* Panel Admin (Inicialmente Oculto) */
         .admin-box { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 24px; padding: 20px; margin-bottom: 25px; display: none; text-align: left; box-shadow: 0 4px 12px rgba(217,119,6,0.05); }
         .admin-box h4 { color: #b45309; font-size: 14px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px dashed #fcd34d; padding-bottom: 6px; letter-spacing: 0.5px; }
         .admin-section { margin-bottom: 18px; background: white; padding: 14px; border-radius: 16px; border: 1px solid #fef3c7; }
@@ -299,14 +297,14 @@
                         </div>
                         <h2 style="font-size: 20px; color: #0f172a; font-weight: 800;" id="profile-user">...</h2>
                         <p style="font-size: 13px; color: #64748b; font-weight: 600; margin-top: 2px;" id="profile-company">...</p>
-                        
-                        <div class="stats-grid">
-                            <div class="stat-box"><div class="stat-num" id="stat-fichajes">0</div><div class="stat-lbl">Movimientos</div></div>
-                            <div class="stat-box"><div class="stat-num" id="stat-informes">0</div><div class="stat-lbl">Controles</div></div>
-                        </div>
                     </div>
 
-                    <div class="cv-box">
+                    <div class="btn-toggle-section" onclick="toggleSeccion('cv-box', 'arrow-cv')">
+                        <span>✏️ Modificar Datos Personales</span>
+                        <i class="fa-solid fa-chevron-down" id="arrow-cv"></i>
+                    </div>
+
+                    <div class="cv-box" id="cv-box">
                         <div class="cv-title"><i class="fa-solid fa-id-card" style="color:#0f172a;"></i> Datos Personales (Hoja de Vida)</div>
                         
                         <div class="form-group" style="margin-bottom:12px;">
@@ -323,6 +321,11 @@
                         </div>
 
                         <button class="btn-submit" style="margin-top:5px; padding:14px; font-size:14px; background: #0f172a; box-shadow: 0 4px 10px rgba(15,23,42,0.15);" onclick="guardarHojaVida()"><i class="fa-solid fa-floppy-disk"></i> GUARDAR DATOS PERSONALES</button>
+                    </div>
+
+                    <div class="btn-toggle-section" id="btn-toggle-admin" style="display: none; background: #fffbeb; border-color: #fef3c7; color: #b45309;" onclick="toggleSeccion('panel-admin', 'arrow-adm')">
+                        <span>⚙️ Panel de Control Administrador</span>
+                        <i class="fa-solid fa-chevron-down" id="arrow-adm"></i>
                     </div>
 
                     <div class="admin-box" id="panel-admin">
@@ -448,13 +451,14 @@
             document.getElementById('profile-company').innerText = `Rol: ${usuarioLogueado.rol} | ${empresa}`;
             
             const isAdm = usuarioLogueado.rol.toLowerCase().trim() === "admin";
-            document.getElementById('panel-admin').style.display = isAdm ? "block" : "none";
+            document.getElementById('btn-toggle-admin').style.display = isAdm ? "flex" : "none";
+            document.getElementById('panel-admin').style.display = "none";
+            document.getElementById('cv-box').style.display = "none";
 
             actualizarListasSitios();
             cargarHojaVidaYFoto();
             changeScreen('screen-home');
             switchTab('fichaje');
-            updateStats();
         }
 
         function cambiarFotoPerfil(input) {
@@ -480,6 +484,7 @@
             };
             localStorage.setItem(`cv_${usuarioLogueado.nombre}`, JSON.stringify(datos));
             alert("✅ Hoja de Vida guardada con éxito.");
+            toggleSeccion('cv-box', 'arrow-cv'); // Se cierra al guardar de forma estética
         }
 
         function cargarHojaVidaYFoto() {
@@ -498,6 +503,18 @@
             document.getElementById('cv-legajo').value = cvGuardado?.legajo || "";
             document.getElementById('cv-telefono').value = cvGuardado?.telefono || "";
             document.getElementById('cv-domicilio').value = cvGuardado?.domicilio || "";
+        }
+
+        function toggleSeccion(idBox, idArrow) {
+            const box = document.getElementById(idBox);
+            const arrow = document.getElementById(idArrow);
+            if(box.style.display === "block") {
+                box.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                box.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
+            }
         }
 
         function filtrarSitios(modulo) {
@@ -672,6 +689,7 @@
                 alert("✅ Supervisor guardado con éxito.");
                 document.getElementById('adm-sup-nombre').value = ""; document.getElementById('adm-sup-pin').value = "";
                 cargarDatosEnSegundoPlano();
+                toggleSeccion('panel-admin', 'arrow-adm');
             });
         }
 
@@ -685,6 +703,7 @@
                 alert("✅ Objetivo guardado con éxito.");
                 document.getElementById('adm-sitio-nombre').value = "";
                 cargarDatosEnSegundoPlano();
+                toggleSeccion('panel-admin', 'arrow-adm');
             });
         }
 
@@ -692,7 +711,6 @@
             const reg = { tipo, titulo, desc, hora: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), fecha: new Date().toLocaleDateString() };
             historialLocal.unshift(reg);
             localStorage.setItem('historial_recorridas', JSON.stringify(historialLocal));
-            updateStats();
         }
 
         function renderHistorial() {
@@ -702,11 +720,6 @@
                 const cls = i.tipo === 'Entrada' ? 'fichaje-type' : (i.tipo === 'Salida' ? 'salida-type' : '');
                 list.innerHTML += `<div class="history-item ${cls}"><div class="history-meta"><span>📅 ${i.fecha}</span><span>⏱️ ${i.hora}</span></div><div class="history-title">${i.titulo}</div><div class="history-desc">${i.desc}</div></div>`;
             });
-        }
-
-        function updateStats() {
-            document.getElementById('stat-fichajes').innerText = historialLocal.filter(i => i.tipo !== 'Informe').length;
-            document.getElementById('stat-informes').innerText = historialLocal.filter(i => i.tipo === 'Informe').length;
         }
 
         function changeScreen(id) {
