@@ -113,7 +113,7 @@
 
         /* Barra de Navegación Flotante y Moderna */
         .bottom-nav { width: 100%; height: 75px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 800; color: #94a3b8; cursor: pointer; gap: 5px; width: 22%; transition: color 0.2s; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 5px; width: 22%; transition: color 0.2s; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3px; color: #94a3b8; font-weight: 800; }
         .nav-item i { font-size: 20px; transition: transform 0.2s; }
         .nav-item.active-nav { color: #0f172a; }
         .nav-item.active-nav i { transform: translateY(-2px); color: #0f172a; }
@@ -370,6 +370,7 @@
     </div>
 
     <script>
+        // URL de tu API de Google Web App
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZBaAk0qGunKCVFgLzzMM-xkLs_YeU_DMzI66RZTiX5Qk_nI_t_mlMWjHCeax_Rk8C/exec";
         
         let dbSupervisores = [];
@@ -426,13 +427,13 @@
                 dbSitios = dataSitios;
                 if(usuarioLogueado) { actualizarListasSitios(); }
             })
-            .catch(err => console.log("Carga de fondo..."));
+            .catch(err => console.log("Sincronizando con base de datos..."));
         }
 
         function evaluarPin(pin) {
             if (pin.length === 4) {
                 if (dbSupervisores.length === 0) {
-                    alert("⏱️ Conexión lenta: El sistema se está sincronizando con Google Sheets, aguarde 3 segundos y vuelva a ingresar el PIN.");
+                    alert("⏱️ El sistema se está sincronizando con Google Sheets, aguarde 3 segundos y vuelva a ingresar el PIN.");
                     document.getElementById('input-pin').value = "";
                     cargarDatosEnSegundoPlano();
                     return;
@@ -475,7 +476,7 @@
                     img.style.display = 'block';
                     
                     const claveLimpia = "avatar_sup_" + usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
-                    localStorage.setItem(claveLinter, base64); // Cambiado para asegurar coincidencia
+                    localStorage.setItem(claveLimpia, base64);
                 }
                 lector.readAsDataURL(input.files[0]);
             }
@@ -491,13 +492,12 @@
             const claveLimpia = "cv_sup_" + usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
             localStorage.setItem(claveLimpia, JSON.stringify(datos));
             
-            alert("✅ Hoja de Vida guardada con éxito.");
+            alert("✅ Datos guardados localmente.");
             toggleSeccion('cv-box', 'arrow-cv');
         }
 
         function cargarHojaVidaYFoto() {
             if (!usuarioLogueado) return;
-            
             const idLimpio = usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
 
             const fotoGuardada = localStorage.getItem("avatar_sup_" + idLimpio);
@@ -562,7 +562,7 @@
 
         function registrarFichaje(tipo) {
             const sitio = document.getElementById('fichaje-sitio').value;
-            if (!sitio) { alert("Seleccione objetivo."); return; }
+            if (!sitio) { alert("Por favor, seleccione un objetivo."); return; }
             const obs = document.getElementById('fichaje-observaciones').value;
             const payload = {
                 tipo_registro: "fichaje", supervisor: `${usuarioLogueado.nombre} (${empresaSeleccionada})`,
@@ -570,7 +570,7 @@
             };
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert(`✅ ${tipo} registrado.`);
+                alert(`✅ ${tipo} registrado con éxito.`);
                 guardarHistorial(tipo, `${tipo} en: ${sitio}`, obs || "Sin novedades.");
                 document.getElementById('fichaje-observaciones').value = "";
                 if(tipo === 'Entrada') switchTab('informe');
@@ -605,10 +605,7 @@
                 const rect = canvas.getBoundingClientRect();
                 const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
-                return {
-                    x: clienteX - rect.left,
-                    y: clienteY - rect.top
-                };
+                return { x: clienteX - rect.left, y: clienteY - rect.top };
             }
 
             canvas.addEventListener('touchstart', function(e) {
@@ -626,10 +623,7 @@
                 ctx.stroke();
             }, { passive: false });
 
-            canvas.addEventListener('touchend', function() {
-                dibujando = false;
-            });
-
+            canvas.addEventListener('touchend', function() { dibujando = false; });
             canvas.addEventListener('mousedown', function(e) {
                 dibujando = true;
                 const pos = obtenerPosTouch(e);
@@ -643,9 +637,7 @@
                     ctx.stroke();
                 }
             });
-            window.addEventListener('mouseup', function() {
-                dibujando = false;
-            });
+            window.addEventListener('mouseup', function() { dibujando = false; });
         }
 
         function limpiarFirma() {
@@ -657,11 +649,11 @@
             const btn = document.getElementById('btn-enviar');
             btn.innerText = "Enviando Control..."; btn.disabled = true;
 
-            const firmaBase64 = canvas.toDataURL();
+            const firmaBase64 = canvas.toDataURL("image/png");
 
             const payload = {
                 tipo_registro: "informe",
-                supervisor: usuarioLogueado.nombre,
+                supervisor: `${usuarioLogueado.nombre} (${empresaSeleccionada})`,
                 contacto: document.getElementById('field-contacto').value,
                 sitio: document.getElementById('field-sitio').value,
                 horaIngreso: document.getElementById('field-horaIngreso').value,
@@ -687,6 +679,8 @@
                 limpiarFirma();
                 document.getElementById('photo-status').innerText = "0 de 5 fotos seleccionadas";
                 switchTab('historial');
+            }).catch(err => {
+                alert("❌ Error al enviar el informe. Verifique su conexión.");
             }).finally(() => { btn.innerText = "ENVIAR CONTROL FINAL"; btn.disabled = false; });
         }
 
@@ -698,7 +692,7 @@
             const payload = { tipo_registro: "nuevo_supervisor", nombre, pin, rol };
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert("✅ Supervisor guardado con éxito.");
+                alert("✅ Supervisor guardado en base de datos.");
                 document.getElementById('adm-sup-nombre').value = ""; document.getElementById('adm-sup-pin').value = "";
                 cargarDatosEnSegundoPlano();
                 toggleSeccion('panel-admin', 'arrow-adm');
@@ -712,7 +706,7 @@
             const payload = { tipo_registro: "nuevo_sitio", sitio, empresa };
             fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
             .then(() => {
-                alert("✅ Objetivo guardado con éxito.");
+                alert("✅ Objetivo guardado en base de datos.");
                 document.getElementById('adm-sitio-nombre').value = "";
                 cargarDatosEnSegundoPlano();
                 toggleSeccion('panel-admin', 'arrow-adm');
