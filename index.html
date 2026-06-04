@@ -161,7 +161,7 @@
     </div>
 
     <script>
-        // REVISE QUE ACA ESTE LA URL CORRECTA DE TU VERSION 4 DE APPS SCRIPT
+        // URL DE TU SCRIPT EN VERSION 4 (ASEGURATE QUE QUEDE BIEN EL ENLACE PÚBLICO)
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZBaAk0qGunKCVFgLzzMM-xkLs_YeU_DMzI66RZTiX5Qk_nI_t_mlMWjHCeax_Rk8C/exec";
         
         let dbSupervisores = JSON.parse(localStorage.getItem('gp_sups')) || [];
@@ -210,7 +210,8 @@
             .catch(e => {
                 console.log("Trabajando con caché local.");
                 if(dbSupervisores.length === 0) {
-                    document.getElementById('splash-text').innerText = "ERROR DE RED. REINTENTANDO...";
+                    // ACA QUEDABA TRABADO EL CARTEL VIEJO, CORREGIDO A "INGRESANDO..."
+                    document.getElementById('splash-text').innerText = "INGRESANDO...";
                     setTimeout(preCargarDatos, 3000);
                 }
             });
