@@ -60,7 +60,7 @@
     <div class="app-container">
         <div id="screen-splash" class="screen active">
             <img src="https://grupoplus.com.ar/wp-content/uploads/2021/07/logo-grupo-plus.png" alt="Grupo Plus" class="logo-splash">
-            <p id="splash-text" style="font-size: 12px; font-weight: 700; letter-spacing: 1px;">CARGANDO SISTEMA...</p>
+            <p id="splash-text" style="font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #deff9a;">INGRESANDO...</p>
         </div>
 
         <div id="screen-login" class="screen">
@@ -161,7 +161,7 @@
     </div>
 
     <script>
-        // PEGA TU URL DE APPS SCRIPT ASOCIADA A LA VERSION 4
+        // REVISE QUE ACA ESTE LA URL CORRECTA DE TU VERSION 4 DE APPS SCRIPT
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZBaAk0qGunKCVFgLzzMM-xkLs_YeU_DMzI66RZTiX5Qk_nI_t_mlMWjHCeax_Rk8C/exec";
         
         let dbSupervisores = JSON.parse(localStorage.getItem('gp_sups')) || [];
@@ -262,7 +262,6 @@
             });
         }
 
-        // Lógica del lienzo de dibujo táctil
         function initFirmaCanvas() {
             canvas = document.getElementById('signature-canvas');
             if(!canvas) return;
@@ -328,7 +327,6 @@
             document.getElementById('tab-' + tabId).classList.add('active-tab');
             document.getElementById('btn-tab-' + tabId).classList.add('active-nav');
             
-            // Inicializar el lienzo táctil solo cuando se abre la pestaña de informe
             if(tabId === 'informe') setTimeout(initFirmaCanvas, 200);
         }
 
