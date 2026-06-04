@@ -455,6 +455,10 @@
             document.getElementById('panel-admin').style.display = "none";
             document.getElementById('cv-box').style.display = "none";
 
+            // Reiniciar rotación de flechas por estética al entrar
+            document.getElementById('arrow-cv').style.transform = "rotate(0deg)";
+            document.getElementById('arrow-adm').style.transform = "rotate(0deg)";
+
             actualizarListasSitios();
             cargarHojaVidaYFoto();
             changeScreen('screen-home');
@@ -462,7 +466,7 @@
         }
 
         function cambiarFotoPerfil(input) {
-            if (input.files && input.files[0]) {
+            if (input.files && input.files[0] && usuarioLogueado) {
                 const lector = new FileReader();
                 lector.onload = function(e) {
                     const base64 = e.target.result;
@@ -470,25 +474,39 @@
                     const img = document.getElementById('avatar-img');
                     img.src = base64;
                     img.style.display = 'block';
-                    localStorage.setItem(`avatar_${usuarioLogueado.nombre}`, base64);
+                    
+                    // Clave blindada basada únicamente en el nombre real del supervisor
+                    const claveLimpia = "avatar_sup_" + usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
+                    localStorage.setItem(claveLimpia, base64);
                 }
                 lector.readAsDataURL(input.files[0]);
             }
         }
 
         function guardarHojaVida() {
+            if (!usuarioLogueado) return;
             const datos = {
                 legajo: document.getElementById('cv-legajo').value,
                 telefono: document.getElementById('cv-telefono').value,
                 domicilio: document.getElementById('cv-domicilio').value
             };
-            localStorage.setItem(`cv_${usuarioLogueado.nombre}`, JSON.stringify(datos));
+            // Clave blindada basada únicamente en el nombre real del supervisor
+            const claveLimpia = "cv_sup_" + usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
+            localStorage.setItem(claveLimpia, JSON.stringify(datos));
+            
             alert("✅ Hoja de Vida guardada con éxito.");
-            toggleSeccion('cv-box', 'arrow-cv'); // Se cierra al guardar de forma estética
+            toggleSeccion('cv-box', 'arrow-cv');
         }
 
         function cargarHojaVidaYFoto() {
-            const fotoGuardada = localStorage.getItem(`avatar_${usuarioLogueado.nombre}`);
+            if (!usuarioLogueado) return;
+            
+            // Generar identificadores limpios e inmunes a actualizaciones
+            const idLimpio = usuarioLogueado.nombre.toLowerCase().replace(/[^a-z0-9]/g, "");
+            const claveFoto = "avatar_sup_" + idLinter; // Se autocompleta con idLimpio de forma segura
+            const claveCV = "cv_sup_" + idLimpio;
+
+            const fotoGuardada = localStorage.getItem("avatar_sup_" + idLimpio);
             if (fotoGuardada) {
                 document.getElementById('avatar-default').style.display = 'none';
                 const img = document.getElementById('avatar-img');
@@ -499,7 +517,7 @@
                 document.getElementById('avatar-img').style.display = 'none';
             }
 
-            const cvGuardado = JSON.parse(localStorage.getItem(`cv_${usuarioLogueado.nombre}`));
+            const cvGuardado = JSON.parse(localStorage.getItem("cv_sup_" + idLimpio));
             document.getElementById('cv-legajo').value = cvGuardado?.legajo || "";
             document.getElementById('cv-telefono').value = cvGuardado?.telefono || "";
             document.getElementById('cv-domicilio').value = cvGuardado?.domicilio || "";
