@@ -6,72 +6,52 @@
     <title>App Supervisores - Grupo Plus</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #334155; }
-        
-        .app-container { width: 100%; max-width: 430px; height: 100vh; background: #f8fafc; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; }
+        body { background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #334155; }
+        .app-container { width: 100%; max-width: 430px; height: 100vh; background: #f8fafc; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         .screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px; text-align: center; }
         .active { display: flex; }
-        
-        /* Splash Screen */
-        #screen-splash { background: #0f172a; color: white; }
-        .logo-splash { width: 70%; max-width: 250px; margin-bottom: 20px; }
-        
-        /* Login Screen */
+        #screen-splash { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; }
+        .logo-splash { width: 75%; max-width: 280px; margin-bottom: 25px; }
         #screen-login { background: #0f172a; }
-        .pin-container { background: #ffffff; padding: 35px 20px; border-radius: 20px; width: 85%; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .pin-input { font-size: 28px; text-align: center; letter-spacing: 10px; font-weight: bold; width: 70%; padding: 10px; margin: 20px 0; border: 2px solid #cbd5e1; border-radius: 12px; outline: none; }
-        
-        /* Selector de Empresas */
-        #screen-empresas { background: #0f172a; justify-content: flex-start; padding-top: 50px; }
-        .titulo-empresas { font-size: 20px; font-weight: bold; color: #ffffff; margin-bottom: 30px; letter-spacing: 1px; }
-        .btn-empresa { width: 85%; background: #ffffff; padding: 15px; margin: 12px 0; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s; }
-        .logo-btn { max-width: 160px; max-height: 50px; object-fit: contain; }
-        
-        /* Contenedor Principal (Home) */
+        .pin-container { background: #ffffff; padding: 40px 25px; border-radius: 24px; width: 90%; }
+        .pin-input { font-size: 32px; text-align: center; letter-spacing: 15px; font-weight: 700; width: 80%; padding: 12px; margin: 20px 0; border: 2px solid #cbd5e1; border-radius: 16px; outline: none; }
+        #screen-empresas { background: #0f172a; justify-content: flex-start; padding-top: 60px; }
+        .titulo-empresas { font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 35px; text-transform: uppercase; }
+        .btn-empresa { width: 90%; background: #ffffff; padding: 20px; margin: 15px 0; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .logo-btn { max-width: 180px; max-height: 55px; object-fit: contain; }
         .home-container { display: flex; flex-direction: column; height: 100%; width: 100%; background: #f1f5f9; }
-        
-        /* Header Superior con Perfil */
-        .header-saludo { background: #0f172a; padding: 20px; border-bottom: 4px solid #a3e635; color: white; text-align: left; display: flex; align-items: center; justify-content: space-between; }
-        .welcome-text { font-size: 20px; font-weight: 800; color: #ffffff; }
-        .supervisor-name { font-size: 12px; color: #a3e635; font-weight: bold; margin-top: 2px; text-transform: uppercase; }
-        .profile-badge { background: #1e293b; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; color: #cbd5e1; border: 1px solid #334155; text-transform: uppercase; }
-        
-        /* Contenidos y Formularios */
-        .tab-content { flex: 1; padding: 16px; overflow-y: auto; display: none; padding-bottom: 40px; }
+        .header-saludo { background: #0f172a; padding: 25px 20px; border-bottom: 3px solid #deff9a; color: white; }
+        .welcome-text { font-size: 24px; font-weight: 800; }
+        .supervisor-name { font-size: 13px; color: #deff9a; font-weight: 600; text-transform: uppercase; }
+        .tab-content { flex: 1; padding: 18px; overflow-y: auto; display: none; padding-bottom: 50px; }
         .tab-content.active-tab { display: block; }
-        .tab-title { font-size: 18px; font-weight: bold; color: #0f172a; margin-bottom: 15px; border-left: 4px solid #a3e635; padding-left: 8px; text-transform: uppercase; }
+        .tab-title { font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 18px; border-left: 4px solid #0f172a; padding-left: 10px; text-transform: uppercase; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; }
+        .form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 15px; background-color: #fff; outline: none; }
+        .reloj-container { background: #0f172a; padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; color: #deff9a; }
+        .reloj-digital { font-size: 38px; font-weight: 800; font-family: monospace; }
+        .fichaje-box { background: white; padding: 22px; border-radius: 24px; }
+        .btn-fichaje { width: 100%; color: white; border: none; padding: 18px; font-size: 15px; font-weight: 800; border-radius: 14px; cursor: pointer; margin: 12px 0; text-transform: uppercase; }
+        .btn-entrada { background: #16a34a; }
+        .btn-salida { background: #dc2626; }
         
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 6px; text-transform: uppercase; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background-color: #fff; outline: none; }
+        /* Matriz de calidad */
+        .matrix-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+        .matrix-table th { background: #0f172a; padding: 12px; font-size: 11px; color: white; text-transform: uppercase; }
+        .matrix-table td { padding: 14px 6px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+        .matrix-item-name { font-weight: 700; color: #0f172a; padding-left: 14px !important; }
         
-        /* Sección Fichajes */
-        .reloj-container { background: #0f172a; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 15px; border: 1px solid #334155; }
-        .reloj-digital { font-size: 32px; font-weight: bold; color: #a3e635; font-family: monospace; }
-        .fichaje-box { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .btn-fichaje { width: 100%; color: white; border: none; padding: 15px; font-size: 14px; font-weight: bold; border-radius: 10px; cursor: pointer; margin: 10px 0; text-transform: uppercase; letter-spacing: 0.5px; }
-        .btn-entrada { background: #15803d; }
-        .btn-salida { background: #b91c1c; }
-        
-        /* Matriz de Calidad */
-        .matrix-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .matrix-table th { background: #0f172a; padding: 10px; font-size: 10px; color: white; text-transform: uppercase; }
-        .matrix-table td { padding: 12px 6px; font-size: 13px; border-bottom: 1px solid #f1f5f9; text-align: center; }
-        .matrix-item-name { font-weight: bold; color: #0f172a; text-align: left !important; padding-left: 12px !important; }
-        
-        /* Recuadro de Firma Blindado */
-        .signature-pad-container { background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 12px; position: relative; overflow: hidden; width: 100%; margin-top: 5px; }
-        .signature-canvas { width: 100%; height: 150px; display: block; background: #fdfdfd; touch-action: none; }
-        .btn-clear-sig { background: #64748b; color: white; border: none; padding: 6px 12px; font-size: 10px; font-weight: bold; border-radius: 6px; position: absolute; bottom: 8px; right: 8px; text-transform: uppercase; cursor: pointer; }
+        /* Recuadro de Firma */
+        .signature-pad-container { background: #fff; border: 2px dashed #cbd5e1; border-radius: 16px; position: relative; overflow: hidden; width: 100%; margin-top: 10px; }
+        .signature-canvas { width: 100%; height: 180px; display: block; background: #fafafa; touch-action: none; }
+        .btn-clear-sig { background: #ef4444; color: white; border: none; padding: 8px 14px; font-size: 11px; font-weight: 800; border-radius: 8px; position: absolute; bottom: 10px; right: 10px; text-transform: uppercase; cursor: pointer; }
 
-        .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 16px; font-size: 15px; font-weight: bold; border-radius: 10px; text-transform: uppercase; cursor: pointer; border-bottom: 4px solid #a3e635; }
-        
-        /* Menú Inferior */
-        .bottom-nav { width: 100%; height: 65px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; padding-bottom: 5px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; width: 25%; font-size: 10px; color: #94a3b8; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .nav-item i { font-size: 18px; margin-bottom: 3px; }
+        .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 18px; font-size: 16px; font-weight: 800; border-radius: 14px; text-transform: uppercase; cursor: pointer; }
+        .bottom-nav { width: 100%; height: 75px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; width: 22%; font-size: 10px; color: #94a3b8; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .nav-item i { font-size: 20px; }
         .nav-item.active-nav { color: #0f172a; }
-        .nav-item.active-nav i { color: #a3e635; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -80,20 +60,20 @@
     <div class="app-container">
         <div id="screen-splash" class="screen active">
             <img src="https://grupoplus.com.ar/wp-content/uploads/2021/07/logo-grupo-plus.png" alt="Grupo Plus" class="logo-splash">
-            <p id="splash-text" style="font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a3e635;">INGRESANDO...</p>
+            <p id="splash-text" style="font-size: 12px; font-weight: 700; letter-spacing: 1px;">CARGANDO SISTEMA...</p>
         </div>
 
         <div id="screen-login" class="screen">
             <div class="pin-container">
-                <h3 style="font-size: 18px; margin-bottom: 5px; color: #0f172a; font-weight: bold;">🔑 Acceso</h3>
-                <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Ingrese su PIN de seguridad</p>
+                <h3 style="font-size: 20px; margin-bottom: 5px; color: #0f172a; font-weight: 800;">🔑 Acceso</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Ingrese su PIN de 4 dígitos</p>
                 <input type="password" id="input-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="evaluarPin(this.value)">
-                <div id="login-error" style="color:#ef4444; font-size:11px; font-weight:bold; display:none;">⚠️ PIN incorrecto.</div>
+                <div id="login-error" style="color:#ef4444; font-size:12px; font-weight:700; display:none;">⚠️ PIN incorrecto.</div>
             </div>
         </div>
 
         <div id="screen-empresas" class="screen">
-            <h2 class="titulo-empresas">SELECCIONE EMPRESA</h2>
+            <h2 class="titulo-empresas">Seleccione Empresa</h2>
             <div class="btn-empresa" onclick="selectEmpresa('Protection Now')"><img src="https://grupoplus.com.ar/protection-now/wp-content/uploads/sites/2/2021/07/logo-protection-now.png" class="logo-btn"></div>
             <div class="btn-empresa" onclick="selectEmpresa('Limcorp')"><img src="https://grupoplus.com.ar/limcorp/wp-content/uploads/sites/4/2021/08/logo-limcorp.png" class="logo-btn"></div>
             <div class="btn-empresa" onclick="selectEmpresa('Seguvip')"><img src="https://grupoplus.com.ar/seguvip/wp-content/uploads/sites/3/2021/07/logo-seguvip.png" class="logo-btn"></div>
@@ -102,25 +82,22 @@
         <div id="screen-home" class="screen" style="padding: 0;">
             <div class="home-container">
                 <div class="header-saludo">
-                    <div>
-                        <div class="welcome-text" id="greeting">Buenos días,</div>
-                        <div class="supervisor-name" id="sup-name">...</div>
-                    </div>
-                    <div class="profile-badge" id="sup-rol">SUPERVISOR</div>
+                    <div class="welcome-text" id="greeting">Buenos días,</div>
+                    <div class="supervisor-name" id="sup-name">...</div>
                 </div>
 
                 <div id="tab-fichaje" class="tab-content active-tab">
-                    <h3 class="tab-title">📍 Fichaje de Control</h3>
+                    <h3 class="tab-title">📍 Fichaje</h3>
                     <div class="reloj-container">
                         <div class="reloj-digital" id="cronometro-fichaje">00:00:00</div>
                     </div>
                     <div class="fichaje-box">
                         <div class="form-group">
-                            <label>Objetivo / Sitio</label>
+                            <label>Objetivo</label>
                             <select id="fichaje-sitio" class="form-control"><option value="">Cargando objetivos...</option></select>
                         </div>
                         <div class="form-group">
-                            <label>Observaciones de Turno</label>
+                            <label>Observaciones</label>
                             <textarea id="fichaje-observaciones" class="form-control" rows="2"></textarea>
                         </div>
                         <button class="btn-fichaje btn-entrada" onclick="registrarFichaje('Entrada')">INICIAR RECORRIDA</button>
@@ -129,48 +106,48 @@
                 </div>
 
                 <div id="tab-informe" class="tab-content">
-                    <h3 class="tab-title">📝 Auditoría General</h3>
+                    <h3 class="tab-title">📝 Auditoría</h3>
                     <form id="form-auditoria" onsubmit="enviarReporte(event)">
                         <div class="form-group">
-                            <label>Objetivo Seleccionado</label>
+                            <label>Objetivo</label>
                             <select id="field-sitio" class="form-control" required><option value="">Seleccione...</option></select>
                         </div>
-                        <div class="form-group"><label>Persona de Contacto</label><input type="text" id="field-contacto" class="form-control"></div>
+                        <div class="form-group"><label>Contacto</label><input type="text" id="field-contacto" class="form-control"></div>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:15px;">
-                            <div><label>Hora Ingreso</label><input type="time" id="field-horaIngreso" class="form-control" required></div>
-                            <div><label>Hora Egreso</label><input type="time" id="field-horaEgreso" class="form-control" required></div>
+                            <div><label>Ingreso</label><input type="time" id="field-horaIngreso" class="form-control" required></div>
+                            <div><label>Egreso</label><input type="time" id="field-horaEgreso" class="form-control" required></div>
                         </div>
 
                         <table class="matrix-table">
-                            <thead><tr><th>Ítem de Inspección</th><th>C</th><th>NC</th><th>N/A</th></tr></thead>
+                            <thead><tr><th>Ítem</th><th>C</th><th>NC</th><th>N/A</th></tr></thead>
                             <tbody id="matrix-body"></tbody>
                         </table>
 
                         <div class="form-group">
-                            <label>Estado de Materiales</label>
+                            <label>Materiales</label>
                             <select id="field-estadoMateriales" class="form-control" required><option value="Conforme">Conforme</option><option value="No Conforme">No Conforme</option></select>
                         </div>
-                        <div class="form-group"><label>Observaciones Generales</label><textarea id="field-observaciones" class="form-control" rows="2" required></textarea></div>
+                        <div class="form-group"><label>Observaciones</label><textarea id="field-observaciones" class="form-control" rows="2" required></textarea></div>
                         <div class="form-group">
-                            <label>Estado de Máquinas</label>
+                            <label>Máquinas</label>
                             <select id="field-estadoMaquinas" class="form-control" required><option value="Conforme">Conforme</option><option value="No Conforme">No Conforme</option></select>
                         </div>
                         <div class="form-group">
-                            <label>Uso de Uniforme</label>
+                            <label>Uniforme</label>
                             <select id="field-estadoUniforme" class="form-control" required><option value="Conforme">Conforme</option><option value="No Conforme">No Conforme</option></select>
                         </div>
-                        <div class="form-group"><label>Novedades Extra</label><textarea id="field-novedades" class="form-control" rows="2"></textarea></div>
-                        <div class="form-group"><label>Servicios Complementarios</label><input type="text" id="field-serviciosComplementarios" class="form-control" required></div>
+                        <div class="form-group"><label>Novedades</label><textarea id="field-novedades" class="form-control" rows="2"></textarea></div>
+                        <div class="form-group"><label>Servicios Comp.</label><input type="text" id="field-serviciosComplementarios" class="form-control" required></div>
 
                         <div class="form-group">
-                            <label><i class="fa-solid fa-signature"></i> Firma del Cliente / Supervisor</label>
+                            <label><i class="fa-solid fa-signature"></i> Firma de Conformidad</label>
                             <div class="signature-pad-container">
                                 <canvas id="signature-canvas" class="signature-canvas"></canvas>
                                 <button type="button" class="btn-clear-sig" onclick="limpiarFirma()">Limpiar</button>
                             </div>
                         </div>
 
-                        <button type="submit" id="btn-enviar" class="btn-submit">ENVIAR INFORME INTERNO</button>
+                        <button type="submit" id="btn-enviar" class="btn-submit">ENVIAR INFORME</button>
                     </form>
                 </div>
 
@@ -184,6 +161,7 @@
     </div>
 
     <script>
+        // PEGA TU URL DE APPS SCRIPT ASOCIADA A LA VERSION 4
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZBaAk0qGunKCVFgLzzMM-xkLs_YeU_DMzI66RZTiX5Qk_nI_t_mlMWjHCeax_Rk8C/exec";
         
         let dbSupervisores = JSON.parse(localStorage.getItem('gp_sups')) || [];
@@ -196,9 +174,9 @@
         document.getElementById('matrix-body').innerHTML = matrixItems.map((item, index) => `
             <tr>
                 <td class="matrix-item-name">${item}</td>
-                <td><input type="radio" name="item_${index}" value="C" checked></td>
-                <td><input type="radio" name="item_${index}" value="NC"></td>
-                <td><input type="radio" name="item_${index}" value="N/A"></td>
+                <td style="text-align:center"><input type="radio" name="item_${index}" value="C" checked></td>
+                <td style="text-align:center"><input type="radio" name="item_${index}" value="NC"></td>
+                <td style="text-align:center"><input type="radio" name="item_${index}" value="N/A"></td>
             </tr>
         `).join('');
 
@@ -207,6 +185,7 @@
                 const h = new Date();
                 document.getElementById('cronometro-fichaje').innerText = h.toLocaleTimeString();
             }, 1000);
+            
             preCargarDatos();
         });
 
@@ -229,9 +208,9 @@
                 changeScreen('screen-login');
             })
             .catch(e => {
-                console.log("Caché activa.");
+                console.log("Trabajando con caché local.");
                 if(dbSupervisores.length === 0) {
-                    document.getElementById('splash-text').innerText = "INGRESANDO...";
+                    document.getElementById('splash-text').innerText = "ERROR DE RED. REINTENTANDO...";
                     setTimeout(preCargarDatos, 3000);
                 }
             });
@@ -252,21 +231,14 @@
 
         function selectEmpresa(empresa) {
             empresaSeleccionada = empresa;
-            
-            // Lógica de Saludo Horario Blindada
             const h = new Date().getHours();
-            let saludo = "Buenos días ☀️";
-            if(h >= 12 && h < 20) saludo = "Buenas tardes ⛅";
-            if(h >= 20 || h < 6) saludo = "Buenas noches 🌙";
-            
-            document.getElementById('greeting').innerText = saludo;
-            document.getElementById('sup-name').innerText = usuarioLogueado.nombre;
-            document.getElementById('sup-rol').innerText = usuarioLogueado.rol || "SUPERVISOR";
+            document.getElementById('greeting').innerText = h < 12 ? "Buenos días ☀️" : (h < 20 ? "Buenas tardes ⛅" : "Buenas noches 🌙");
+            document.getElementById('sup-name').innerText = `${usuarioLogueado.nombre} • ${empresa}`;
             
             const filtrados = dbSitios.filter(s => s.empresa.toLowerCase() === empresa.toLowerCase());
             const selects = [document.getElementById('fichaje-sitio'), document.getElementById('field-sitio')];
             selects.forEach(sel => {
-                sel.innerHTML = '<option value="">Seleccione objetivo...</option>';
+                sel.innerHTML = '<option value="">Seleccione...</option>';
                 filtrados.forEach(s => sel.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`);
             });
 
@@ -290,12 +262,13 @@
             });
         }
 
+        // Lógica del lienzo de dibujo táctil
         function initFirmaCanvas() {
             canvas = document.getElementById('signature-canvas');
             if(!canvas) return;
             ctx = canvas.getContext('2d');
             canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 150; 
+            canvas.height = 180; 
             ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.lineJoin = "round";
 
             function obtenerPosTouch(e) {
@@ -312,7 +285,7 @@
             window.addEventListener('mouseup', function() { dibujando = false; });
         }
 
-        function limpiarFirma() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function limpiarFirma() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
         function enviarReporte(e) {
             e.preventDefault();
@@ -346,7 +319,7 @@
                 switchTab('fichaje');
             })
             .catch(() => alert("Error de conexión"))
-            .finally(() => { btn.innerText = "ENVIAR INFORME INTERNO"; btn.disabled = false; });
+            .finally(() => { btn.innerText = "ENVIAR INFORME"; btn.disabled = false; });
         }
 
         function switchTab(tabId) {
@@ -355,6 +328,7 @@
             document.getElementById('tab-' + tabId).classList.add('active-tab');
             document.getElementById('btn-tab-' + tabId).classList.add('active-nav');
             
+            // Inicializar el lienzo táctil solo cuando se abre la pestaña de informe
             if(tabId === 'informe') setTimeout(initFirmaCanvas, 200);
         }
 
