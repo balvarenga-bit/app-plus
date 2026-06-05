@@ -3,735 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Supervisores - Grupo Plus</title>
+    <title>Grupo Plus - Sistema de Gestión</title>
     <style>
-        /* Estilos generales estilo App Celular - Paleta Grupo Plus */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #334155; }
-        
-        .app-container { width: 100%; max-width: 430px; height: 100vh; background: #f8fafc; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px; text-align: center; }
-        .active { display: flex; }
-        
-        /* PANTALLA 1: SPLASH PREMIUM */
-        #screen-splash { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; }
-        .logo-splash { width: 75%; max-width: 280px; margin-bottom: 25px; filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.5)); }
-        
-        /* PANTALLA DE LOGIN POR PIN */
-        #screen-login { background: #0f172a; justify-content: center; }
-        .pin-container { background: #ffffff; padding: 40px 25px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; border: 1px solid #e2e8f0; }
-        .pin-input { font-size: 32px; text-align: center; letter-spacing: 15px; font-weight: 700; width: 80%; padding: 12px; margin: 20px 0; border: 2px solid #cbd5e1; border-radius: 16px; outline: none; transition: border-color 0.2s; }
-        .pin-input:focus { border-color: #0f172a; }
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --background: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+        }
 
-        /* PANTALLA 2: SELECCIÓN DE EMPRESA */
-        #screen-empresas { background: #0f172a; justify-content: flex-start; padding-top: 60px; }
-        .titulo-empresas { font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-empresa { width: 90%; background: #ffffff; border: none; padding: 20px; margin: 15px 0; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn-empresa:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(222, 255, 154, 0.2); }
-        .logo-btn { max-width: 180px; max-height: 55px; object-fit: contain; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* PANTALLA 3: HOME Y CONTENIDO */
-        .home-container { display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: flex-start; text-align: left; background: #f1f5f9; }
-        .header-saludo { background: #0f172a; padding: 25px 20px; border-bottom: 3px solid #deff9a; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .welcome-text { font-size: 24px; font-weight: 800; color: #ffffff; }
-        .supervisor-name { font-size: 13px; color: #deff9a; font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* Contenido de los Tabs */
-        .tab-content { flex: 1; padding: 18px; overflow-y: auto; display: none; padding-bottom: 50px; }
-        .tab-content.active-tab { display: block; }
-        .tab-title { font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 18px; border-left: 4px solid #0f172a; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
 
-        /* Componentes de Formulario Estilizados */
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-group label span { color: #ef4444; }
-        .form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 15px; background-color: #fff; outline: none; color: #1e293b; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: all 0.2s; }
-        .form-control:focus { border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1); }
-        
-        /* BUSCADOR INTELIGENTE */
-        .search-container { position: relative; margin-bottom: 12px; }
-        .search-container input { padding-left: 40px; background: #ffffff; font-size: 14px; border: 1px solid #cbd5e1; }
-        .search-container i { position: absolute; left: 14px; top: 16px; color: #64748b; font-size: 15px; }
+        h2, h3 {
+            color: var(--primary);
+            margin-top: 0;
+            text-align: center;
+        }
 
-        /* COMPONENTE: RELOJ DIGITAL GRANDE EN FICHAJE */
-        .reloj-container { background: #0f172a; padding: 15px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3); border: 1px solid rgba(222, 255, 154, 0.2); }
-        .reloj-digital { font-size: 38px; font-weight: 800; color: #deff9a; letter-spacing: 2px; font-family: monospace, sans-serif; }
-        .reloj-fecha { font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+        .section {
+            display: none;
+        }
 
-        /* Botones de Fichaje Modernizados */
-        .fichaje-box { background: white; border: none; padding: 22px; border-radius: 24px; margin-top: 5px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); }
-        .btn-fichaje { width: 100%; color: white; border: none; padding: 18px; font-size: 15px; font-weight: 800; border-radius: 14px; cursor: pointer; margin: 12px 0; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.2s; letter-spacing: 0.5px; text-transform: uppercase; }
-        .btn-fichaje:active { transform: scale(0.97); opacity: 0.9; }
-        .btn-entrada { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3); }
-        .btn-salida { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); box-shadow: 0 4px 12px rgba(220, 26, 38, 0.3); }
-        
-        /* Tabla Matricial de Auditoría Estilizada */
-        .matrix-table { width: 100%; border-collapse: collapse; margin-top: 8px; background: white; border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 4px 16px rgba(15,23,42,0.04); margin-bottom: 20px; }
-        .matrix-table th { background: #0f172a; padding: 12px; font-size: 11px; font-weight: 800; color: #ffffff; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
-        .matrix-table td { padding: 14px 6px; font-size: 14px; border-bottom: 1px solid #f1f5f9; color: #334155; }
-        .matrix-item-name { font-weight: 700; color: #0f172a; padding-left: 14px !important; }
-        .matrix-table input[type="radio"] { width: 18px; height: 18px; accent-color: #0f172a; cursor: pointer; }
-        
-        /* Módulos de evidencia y firma */
-        .photo-counter { font-size: 12px; font-weight: 700; color: #64748b; margin-top: 6px; display: block; padding-left: 2px; }
-        .signature-pad-container { background: #fff; border: 2px dashed #cbd5e1; border-radius: 16px; position: relative; margin-top: 5px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); width: 100%; }
-        .signature-canvas { width: 100%; height: 180px; display: block; cursor: crosshair; background: #fafafa; touch-action: none; -webkit-user-select: none; user-select: none; }
-        .btn-clear-sig { background: #ef4444; color: white; border: none; padding: 8px 14px; font-size: 11px; font-weight: 800; border-radius: 8px; cursor: pointer; position: absolute; bottom: 10px; right: 10px; text-transform: uppercase; box-shadow: 0 2px 6px rgba(239,68,68,0.2); }
+        .section.active {
+            display: block;
+        }
 
-        .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 18px; font-size: 16px; font-weight: 800; border-radius: 14px; cursor: pointer; margin-top: 20px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 14px rgba(15,23,42,0.2); transition: all 0.2s; }
-        .btn-submit:active { transform: scale(0.98); }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-        /* Historial Tarjetas Premium */
-        .history-item { background: white; border: none; padding: 16px; border-radius: 16px; margin-bottom: 14px; border-left: 5px solid #0f172a; box-shadow: 0 4px 12px rgba(15,23,42,0.03); }
-        .history-item.fichaje-type { border-left-color: #16a34a; }
-        .history-item.salida-type { border-left-color: #dc2626; }
-        .history-meta { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
-        .history-title { font-size: 15px; font-weight: 800; color: #0f172a; }
-        .history-desc { font-size: 13px; color: #475569; margin-top: 6px; line-height: 1.4; }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
 
-        /* Tarjeta Perfil Estilizada */
-        .profile-card { background: white; border: none; padding: 25px 20px; border-radius: 24px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); position: relative; }
-        .profile-avatar-container { position: relative; width: 85px; height: 85px; margin: 0 auto 12px auto; }
-        .profile-avatar { width: 100%; height: 100%; background: #0f172a; color: #deff9a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; box-shadow: 0 4px 10px rgba(15,23,42,0.2); object-fit: cover; border: 2px solid #deff9a; }
-        .btn-edit-avatar { position: absolute; bottom: 0; right: 0; background: #0f172a; color: white; border: 1px solid #deff9a; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        
-        /* Botones Desplegables Estéticos */
-        .btn-toggle-section { width: 100%; background: white; border: 1px solid #e2e8f0; padding: 16px; border-radius: 16px; font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        
-        /* Contenedor Hoja de Vida (Inicialmente Oculto) */
-        .cv-box { display: none; background: white; border: none; padding: 22px; border-radius: 24px; margin-bottom: 25px; box-shadow: 0 4px 16px rgba(15,23,42,0.04); text-align: left; }
-        .cv-title { font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        
-        /* Panel Admin (Inicialmente Oculto) */
-        .admin-box { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 24px; padding: 20px; margin-bottom: 25px; display: none; text-align: left; box-shadow: 0 4px 12px rgba(217,119,6,0.05); }
-        .admin-box h4 { color: #b45309; font-size: 14px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px dashed #fcd34d; padding-bottom: 6px; letter-spacing: 0.5px; }
-        .admin-section { margin-bottom: 18px; background: white; padding: 14px; border-radius: 16px; border: 1px solid #fef3c7; }
-        .admin-section-title { font-size: 11px; font-weight: 800; margin-bottom: 10px; color: #b45309; text-transform: uppercase; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
 
-        .btn-logout { width: 100%; background: #64748b; color: white; border: none; padding: 15px; font-size: 14px; font-weight: 800; border-radius: 12px; cursor: pointer; margin-top: 12px; text-transform: uppercase; transition: background 0.2s; }
-        .btn-logout:hover { background: #475569; }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
 
-        /* Barra de Navegación Flotante y Moderna */
-        .bottom-nav { width: 100%; height: 75px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 800; color: #94a3b8; cursor: pointer; gap: 5px; width: 22%; transition: color 0.2s; text-transform: uppercase; font-size: 10px; letter-spacing: 0.3px; }
-        .nav-item i { font-size: 20px; transition: transform 0.2s; }
-        .nav-item.active-nav { color: #0f172a; }
-        .nav-item.active-nav i { transform: translateY(-2px); color: #0f172a; }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.secondary {
+            background-color: #6b7280;
+        }
+        button.secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .user-info {
+            background: #eff6ff;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: var(--primary);
+            font-weight: bold;
+            margin: 15px 0;
+        }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-    <div class="app-container">
+<div class="container">
+    <h2>GRUPO PLUS</h2>
+    <div id="loading" class="loading">Procesando, por favor espere...</div>
 
-        <div id="screen-splash" class="screen active">
-            <img src="https://grupoplus.com.ar/wp-content/uploads/2021/07/logo-grupo-plus.png" alt="Grupo Plus" class="logo-splash">
-            <p style="font-size: 14px; opacity: 0.9; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">INGRESANDO....</p>
-        </div>
-
-        <div id="screen-login" class="screen">
-            <div class="pin-container">
-                <h3 style="font-size: 20px; margin-bottom: 5px; color: #0f172a; font-weight: 800;">🔑 Acceso</h3>
-                <p style="font-size: 13px; color: #64748b; margin-bottom: 20px; font-weight: 500;">Ingrese su PIN de 4 dígitos</p>
-                <input type="password" id="input-pin" class="pin-input" maxlength="4" placeholder="••••" oninput="evaluarPin(this.value)">
-                <div id="login-error" style="color:#ef4444; font-size:12px; font-weight:700; display:none; margin-top:5px;">⚠️ PIN incorrecto.</div>
-            </div>
-        </div>
-
-        <div id="screen-empresas" class="screen">
-            <h2 class="titulo-empresas">Seleccione Empresa</h2>
-            <div class="btn-empresa" onclick="selectEmpresa('Protection Now')">
-                <img src="https://grupoplus.com.ar/protection-now/wp-content/uploads/sites/2/2021/07/logo-protection-now.png" alt="Protection Now" class="logo-btn">
-            </div>
-            <div class="btn-empresa" onclick="selectEmpresa('Limcorp')">
-                <img src="https://grupoplus.com.ar/limcorp/wp-content/uploads/sites/4/2021/08/logo-limcorp.png" alt="Limcorp" class="logo-btn">
-            </div>
-            <div class="btn-empresa" onclick="selectEmpresa('Seguvip')">
-                <img src="https://grupoplus.com.ar/seguvip/wp-content/uploads/sites/3/2021/07/logo-seguvip.png" alt="Seguvip" class="logo-btn">
-            </div>
-        </div>
-
-        <div id="screen-home" class="screen" style="padding: 0;">
-            <div class="home-container">
-                <div class="header-saludo">
-                    <div class="welcome-text" id="greeting">Buenos días,</div>
-                    <div class="supervisor-name" id="sup-name">Cargando...</div>
-                </div>
-
-                <div id="tab-fichaje" class="tab-content active-tab">
-                    <h3 class="tab-title">📍 Fichaje de Recorrida</h3>
-                    
-                    <div class="reloj-container">
-                        <div class="reloj-digital" id="cronometro-fichaje">00:00:00</div>
-                        <div class="reloj-fecha" id="fecha-fichaje">Cargando fecha...</div>
-                    </div>
-
-                    <div class="fichaje-box">
-                        <div class="form-group">
-                            <label>Buscar Objetivo</label>
-                            <div class="search-container">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" id="search-fichaje" class="form-control" placeholder="Macro, Acebal, Sucursal..." oninput="filtrarSitios('fichaje')">
-                            </div>
-                            <select id="fichaje-sitio" class="form-control">
-                                <option value="">Seleccione Sitio...</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Observaciones de Ingreso</label>
-                            <textarea id="fichaje-observaciones" class="form-control" rows="2" placeholder="Ausencias, novedades de ingreso..."></textarea>
-                        </div>
-                        
-                        <button class="btn-fichaje btn-entrada" onclick="registrarFichaje('Entrada')"><i class="fa-solid fa-play"></i> INICIAR RECORRIDA</button>
-                        <button class="btn-fichaje btn-salida" onclick="registrarFichaje('Salida')"><i class="fa-solid fa-stop"></i> FINALIZAR RECORRIDA</button>
-                    </div>
-                </div>
-
-                <div id="tab-informe" class="tab-content">
-                    <h3 class="tab-title">📝 Control de Supervisores Limcorp</h3>
-                    <form id="form-limcorp" onsubmit="enviarReporte(event)">
-                        
-                        <div class="form-group">
-                            <label>Objetivo Auditado <span>*</span></label>
-                            <div class="search-container">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" id="search-informe" class="form-control" placeholder="Macro, Oficinas, Planta..." oninput="filtrarSitios('informe')">
-                            </div>
-                            <select id="field-sitio" class="form-control" required>
-                                <option value="">Seleccione Sitio...</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Contacto con Cliente</label>
-                            <input type="text" id="field-contacto" class="form-control" placeholder="Nombre del contacto...">
-                        </div>
-
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                            <div class="form-group">
-                                <label>Hora Ingreso <span>*</span></label>
-                                <input type="time" id="field-horaIngreso" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Hora Egreso <span>*</span></label>
-                                <input type="time" id="field-horaEgreso" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <label style="display:block; font-size:12px; font-weight:700; color:#475569; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">Control de Calidad</label>
-                        <table class="matrix-table">
-                            <thead>
-                                <tr><th>Ítem</th><th>C</th><th>NC</th><th>N/A</th></tr>
-                            </thead>
-                            <tbody id="matrix-body"></tbody>
-                        </table>
-
-                        <div class="form-group">
-                            <label>Estado Materiales <span>*</span></label>
-                            <select id="field-estadoMateriales" class="form-control" required>
-                                <option value="">Seleccione Estado...</option>
-                                <option value="Conforme">Conforme</option>
-                                <option value="No Conforme">No Conforme</option>
-                                <option value="No Aplica">No Aplica</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group"><label>Observaciones Generales <span>*</span></label><textarea id="field-observaciones" class="form-control" rows="3" required placeholder="Escriba el detalle de la auditoría..."></textarea></div>
-                        
-                        <div class="form-group">
-                            <label>Estado Máquinas <span>*</span></label>
-                            <select id="field-estadoMaquinas" class="form-control" required>
-                                <option value="">Seleccione Estado...</option>
-                                <option value="Conforme">Conforme</option>
-                                <option value="No Conforme">No Conforme</option>
-                                <option value="No Aplica">No Aplica</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Estado Uniforme <span>*</span></label>
-                            <select id="field-estadoUniforme" class="form-control" required>
-                                <option value="">Seleccione Estado...</option>
-                                <option value="Conforme">Conforme</option>
-                                <option value="No Conforme">No Conforme</option>
-                                <option value="No Aplica">No Aplica</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group"><label>Novedades del Servicio</label><textarea id="field-novedades" class="form-control" rows="2" placeholder="Novedades de personal, novedades operativas..."></textarea></div>
-                        <div class="form-group"><label>Servicios Complementarios <span>*</span></label><input type="text" id="field-serviciosComplementarios" class="form-control" required placeholder="Ofrecimiento de pulidos, vidrios, etc..."></div>
-
-                        <div class="form-group">
-                            <label><i class="fa-solid fa-camera" style="color:#0f172a;"></i> Adjuntar Evidencia Fotográfica (Máx. 5)</label>
-                            <input type="file" id="field-fotos" class="form-control" accept="image/*" multiple onchange="validarFotos(this)">
-                            <span class="photo-counter" id="photo-status">0 de 5 fotos seleccionadas</span>
-                        </div>
-
-                        <div class="form-group">
-                            <label><i class="fa-solid fa-signature" style="color:#0f172a;"></i> Firma de Conformidad del Cliente</label>
-                            <div class="signature-pad-container">
-                                <canvas id="signature-canvas" class="signature-canvas"></canvas>
-                                <button type="button" class="btn-clear-sig" onclick="limpiarFirma()">Limpiar</button>
-                            </div>
-                        </div>
-
-                        <button type="submit" id="btn-enviar" class="btn-submit" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 14px rgba(22,163,74,0.25);"><i class="fa-solid fa-paper-plane"></i> ENVIAR CONTROL FINAL</button>
-                    </form>
-                </div>
-
-                <div id="tab-historial" class="tab-content">
-                    <h3 class="tab-title">📋 Mi Actividad</h3>
-                    <div id="history-list"></div>
-                </div>
-
-                <div id="tab-perfil" class="tab-content">
-                    <h3 class="tab-title">👤 Mi Perfil</h3>
-                    
-                    <div class="profile-card">
-                        <div class="profile-avatar-container">
-                            <div id="avatar-default" class="profile-avatar"><i class="fa-solid fa-user"></i></div>
-                            <img id="avatar-img" class="profile-avatar" style="display:none;" alt="Foto de perfil">
-                            <label for="upload-avatar" class="btn-edit-avatar"><i class="fa-solid fa-camera"></i></label>
-                            <input type="file" id="upload-avatar" accept="image/*" style="display:none;" onchange="cambiarFotoPerfil(this)">
-                        </div>
-                        <h2 style="font-size: 20px; color: #0f172a; font-weight: 800;" id="profile-user">...</h2>
-                        <p style="font-size: 13px; color: #64748b; font-weight: 600; margin-top: 2px;" id="profile-company">...</p>
-                    </div>
-
-                    <div class="btn-toggle-section" onclick="toggleSeccion('cv-box', 'arrow-cv')">
-                        <span>✏️ Modificar Datos Personales</span>
-                        <i class="fa-solid fa-chevron-down" id="arrow-cv"></i>
-                    </div>
-
-                    <div class="cv-box" id="cv-box">
-                        <div class="cv-title"><i class="fa-solid fa-id-card" style="color:#0f172a;"></i> Datos Personales (Hoja de Vida)</div>
-                        
-                        <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:10px;">Número de Legajo</label>
-                            <input type="text" id="cv-legajo" class="form-control" style="padding:10px; font-size:14px;" placeholder="Ej: L-4920">
-                        </div>
-                        <div class="form-group" style="margin-bottom:12px;">
-                            <label style="font-size:10px;">Número de Teléfono</label>
-                            <input type="tel" id="cv-telefono" class="form-control" style="padding:10px; font-size:14px;" placeholder="Ej: +54 341 6123456">
-                        </div>
-                        <div class="form-group" style="margin-bottom:15px;">
-                            <label style="font-size:10px;">Domicilio Real</label>
-                            <input type="text" id="cv-domicilio" class="form-control" style="padding:10px; font-size:14px;" placeholder="Ej: Av. Pellegrini 1500, Rosario">
-                        </div>
-
-                        <button class="btn-submit" style="margin-top:5px; padding:14px; font-size:14px; background: #0f172a; box-shadow: 0 4px 10px rgba(15,23,42,0.15);" onclick="guardarHojaVida()"><i class="fa-solid fa-floppy-disk"></i> GUARDAR DATOS PERSONALES</button>
-                    </div>
-
-                    <div class="btn-toggle-section" id="btn-toggle-admin" style="display: none; background: #fffbeb; border-color: #fef3c7; color: #b45309;" onclick="toggleSeccion('panel-admin', 'arrow-adm')">
-                        <span>⚙️ Panel de Control Administrador</span>
-                        <i class="fa-solid fa-chevron-down" id="arrow-adm"></i>
-                    </div>
-
-                    <div class="admin-box" id="panel-admin">
-                        <h4>⚙️ Herramientas Admin</h4>
-                        
-                        <div class="admin-section">
-                            <p class="admin-section-title">Alta de Supervisor</p>
-                            <input type="text" id="adm-sup-nombre" class="form-control" style="padding:10px; margin-bottom:8px; font-size:13px;" placeholder="Nombre...">
-                            <input type="number" id="adm-sup-pin" class="form-control" style="padding:10px; margin-bottom:8px; font-size:13px;" placeholder="PIN 4 dígitos">
-                            <select id="adm-sup-rol" class="form-control" style="padding:10px; font-size:13px;">
-                                <option value="Supervisor">Rol: Supervisor</option>
-                                <option value="Admin">Rol: Administrador</option>
-                            </select>
-                            <button class="btn-submit" style="margin-top:12px; padding:12px; font-size:13px;" onclick="addSupervisorAdmin()">GUARDAR SUPERVISOR</button>
-                        </div>
-
-                        <div class="admin-section">
-                            <p class="admin-section-title">Alta de Nuevo Objetivo / Servicio</p>
-                            <input type="text" id="adm-sitio-nombre" class="form-control" style="padding:10px; margin-bottom:8px; font-size:13px;" placeholder="Nombre del Sitio (Ej: MACRO - SUC)...">
-                            <select id="adm-sitio-empresa" class="form-control" style="padding:10px; font-size:13px;">
-                                <option value="Limcorp">Empresa: Limcorp</option>
-                                <option value="Protection Now">Empresa: Protection Now</option>
-                                <option value="Seguvip">Empresa: Seguvip</option>
-                            </select>
-                            <button class="btn-submit" style="margin-top:12px; padding:12px; font-size:13px; background:#d97706; box-shadow: 0 4px 10px rgba(217,119,6,0.15);" onclick="addSitioAdmin()">GUARDAR OBJETIVO</button>
-                        </div>
-                    </div>
-                    
-                    <button class="btn-logout" onclick="changeScreen('screen-empresas')"><i class="fa-solid fa-building"></i> Cambiar Empresa</button>
-                    <button class="btn-logout" style="background:#dc2626; margin-top:14px;" onclick="location.reload()"><i class="fa-solid fa-lock"></i> Cerrar Sesión</button>
-                </div>
-
-                <div class="bottom-nav">
-                    <div class="nav-item active-nav" id="btn-tab-fichaje" onclick="switchTab('fichaje')"><i class="fa-solid fa-clock"></i>Fichaje</div>
-                    <div class="nav-item" id="btn-tab-informe" onclick="switchTab('informe')"><i class="fa-solid fa-clipboard-check"></i>Informe</div>
-                    <div class="nav-item" id="btn-tab-historial" onclick="switchTab('historial')"><i class="fa-solid fa-list-ul"></i>Historial</div>
-                    <div class="nav-item" id="btn-tab-perfil" onclick="switchTab('perfil')"><i class="fa-solid fa-circle-user"></i>Perfil</div>
-                </div>
-            </div>
-        </div>
-
+    <div id="sec-login" class="section active">
+        <h3>Verificación de Identidad</h3>
+        <p style="text-align: center; font-size: 14px; color: #6b7280; margin-bottom: 20px;">
+            Para evitar la suplantación de identidad, el sistema validará su cuenta oficial de Google asignada.
+        </p>
+        <button onclick="verificarUsuarioGoogle()">Ingresar con mi cuenta de Google</button>
     </div>
 
-    <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZBaAk0qGunKCVFgLzzMM-xkLs_YeU_DMzI66RZTiX5Qk_nI_t_mlMWjHCeax_Rk8C/exec";
+    <div id="sec-menu" class="section">
+        <div class="user-info">
+            <span id="txt-user">Cargando...</span>
+        </div>
+        <h3>Panel de Control</h3>
+        <div class="menu-grid">
+            <button onclick="mostrarSeccion('sec-fichaje')">Fichaje (Asistencia)</button>
+            <button onclick="mostrarSeccion('sec-informe')">Crear Informe</button>
+            <button id="btn-adm-sup" onclick="mostrarSeccion('sec-alta-sup')" style="display:none;">Alta Supervisor</button>
+            <button id="btn-adm-sitio" onclick="mostrarSeccion('sec-alta-sitio')" style="display:none;">Alta Sitio</button>
+        </div>
+        <button class="secondary" onclick="cerrarSesion()" style="margin-top: 30px;">Cerrar Sesión</button>
+    </div>
+
+    <div id="sec-fichaje" class="section">
+        <h3>Registro de Fichaje</h3>
+        <div class="form-group">
+            <label>Sitio / Objetivo:</label>
+            <select class="select-sitios" id="fichaje-sitio"></select>
+        </div>
+        <div class="form-group">
+            <label>Acción:</label>
+            <select id="fichaje-accion">
+                <option value="INGRESO">INGRESO</option>
+                <option value="EGRESO">EGRESO</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Hora:</label>
+            <input type="time" id="fichaje-hora">
+        </div>
+        <div class="form-group">
+            <label>Observaciones de Fichaje:</label>
+            <textarea id="fichaje-obs" rows="3"></textarea>
+        </div>
+        <button onclick="enviarFichaje()">Registrar Fichaje</button>
+        <button class="secondary" onclick="mostrarSeccion('sec-menu')">Volver</button>
+    </div>
+
+    <div id="sec-informe" class="section">
+        <h3>Informe de Supervisión</h3>
+        <div class="form-group">
+            <label>Sitio / Objetivo:</label>
+            <select class="select-sitios" id="inf-sitio"></select>
+        </div>
+        <div class="form-group">
+            <label>Contacto en Objetivo:</label>
+            <input type="text" id="inf-contacto" placeholder="Nombre de quien recibe">
+        </div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>Hora Ingreso:</label>
+                <input type="time" id="inf-hora-ing">
+            </div>
+            <div class="form-group">
+                <label>Hora Egreso:</label>
+                <input type="time" id="inf-hora-egr">
+            </div>
+        </div>
         
-        let dbSupervisores = [];
-        let dbSitios = [];
-        let usuarioLogueado = null;
-        let empresaSeleccionada = "";
-        let historialLocal = JSON.parse(localStorage.getItem('historial_recorridas')) || [];
+        <h4>Estados de Control</h4>
+        <div class="form-group"><label>Materiales:</label><select id="inf-est-mat"><option>OK</option><option>Regular</option><option>Mal</option></select></div>
+        <div class="form-group"><label>Máquinas:</label><select id="inf-est-maq"><option>OK</option><option>Regular</option><option>Mal</option></select></div>
+        <div class="form-group"><label>Uniforme:</label><select id="inf-est-uni"><option>OK</option><option>Regular</option><option>Mal</option></select></div>
 
-        let canvas, ctx, dibujando = false;
+        <div class="form-group"><label>Observaciones:</label><textarea id="inf-obs" rows="2"></textarea></div>
+        <div class="form-group"><label>Novedades:</label><textarea id="inf-nov" rows="2"></textarea></div>
+        <div class="form-group"><label>Servicios Complementarios:</label><textarea id="inf-serv" rows="2"></textarea></div>
 
-        const matrixItems = ["Pisos / Alfombra", "Paredes", "Escritorios / Muebles", "Limpieza Altura", "Baños / Varios", "Basura", "Cocheras", "Subsuelos", "Ascensores"];
-        document.getElementById('matrix-body').innerHTML = matrixItems.map((item, index) => `
-            <tr>
-                <td class="matrix-item-name">${item}</td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="C" required></td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="NC"></td>
-                <td style="text-align:center"><input type="radio" name="item_${index}" value="N/A"></td>
-            </tr>
-        `).join('');
+        <h4>Ítems de Checklist (Items 0 al 8)</h4>
+        <div id="checklist-contenedor"></div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                changeScreen('screen-login');
-            }, 2000);
-            
-            cargarDatosEnSegundoPlano();
-            setInterval(actualizarRelojFichaje, 1000);
-            actualizarRelojFichaje();
-        });
+        <button onclick="enviarInforme()">Enviar Informe Firmado</button>
+        <button class="secondary" onclick="mostrarSeccion('sec-menu')">Volver</button>
+    </div>
 
-        function actualizarRelojFichaje() {
-            const ahora = new Date();
-            const hrs = String(ahora.getHours()).padStart(2, '0');
-            const mins = String(ahora.getMinutes()).padStart(2, '0');
-            const secs = String(ahora.getSeconds()).padStart(2, '0');
-            
-            const txtReloj = document.getElementById('cronometro-fichaje');
-            if(txtReloj) txtReloj.innerText = `${hrs}:${mins}:${secs}`;
-            
-            const txtFecha = document.getElementById('fecha-fichaje');
-            if(txtFecha) {
-                const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                txtFecha.innerText = ahora.toLocaleDateString('es-ES', opciones);
-            }
-        }
+    <div id="sec-alta-sup" class="section">
+        <h3>Alta de Nuevo Supervisor</h3>
+        <div class="form-group">
+            <label>Nombre Completo:</label>
+            <input type="text" id="add-sup-nombre">
+        </div>
+        <div class="form-group">
+            <label>Correo de Google del Supervisor:</label>
+            <input type="email" id="add-sup-pin" placeholder="ejemplo@gmail.com">
+        </div>
+        <div class="form-group">
+            <label>Rol / Rango:</label>
+            <select id="add-sup-rol">
+                <option value="Supervisor">Supervisor</option>
+                <option value="Administrador">Administrador</option>
+            </select>
+        </div>
+        <button onclick="altaSupervisor()">Crear Supervisor</button>
+        <button class="secondary" onclick="mostrarSeccion('sec-menu')">Volver</button>
+    </div>
 
-        function cargarDatosEnSegundoPlano() {
-            fetch(`${WEB_APP_URL}?action=getSupervisores`)
-            .then(res => res.json()).then(dataSups => {
-                dbSupervisores = dataSups;
-                return fetch(`${WEB_APP_URL}?action=getSitios`);
-            })
-            .then(res => res.json()).then(dataSitios => {
-                dbSitios = dataSitios;
-                if(usuarioLogueado) { actualizarListasSitios(); }
-            })
-            .catch(err => console.log("Carga de fondo..."));
-        }
+    <div id="sec-alta-sitio" class="section">
+        <h3>Alta de Nuevo Sitio</h3>
+        <div class="form-group">
+            <label>Nombre del Sitio / Objetivo:</label>
+            <input type="text" id="add-sitio-nombre">
+        </div>
+        <div class="form-group">
+            <label>Empresa / Cliente:</label>
+            <input type="text" id="add-sitio-empresa">
+        </div>
+        <button onclick="altaSitio()">Crear Sitio</button>
+        <button class="secondary" onclick="mostrarSeccion('sec-menu')">Volver</button>
+    </div>
 
-        function evaluarPin(pin) {
-            if (pin.length === 4) {
-                if (dbSupervisores.length === 0) {
-                    alert("⏱️ Conexión lenta: El sistema se está sincronizando con Google Sheets, aguarde 3 segundos y vuelva a ingresar el PIN.");
-                    document.getElementById('input-pin').value = "";
-                    cargarDatosEnSegundoPlano();
-                    return;
+</div>
+
+<script>
+    // URL ACTUALIZADA CON TU NUEVO ENLACE DE EJECUCIÓN
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKhKD5hm41t8TpZ0GfAcbUuxl0EVaZyETvYB1WSbOh9hEpjXzDS_nljBUIkjo2KCbv/exec";
+
+    let supervisorActual = "";
+    let listaSitios = [];
+
+    const checklistContenedor = document.getElementById('checklist-contenedor');
+    for (let i = 0; i < 9; i++) {
+        checklistContenedor.innerHTML += `
+            <div class="form-group">
+                <label>Ítem ${i + 1}:</label>
+                <input type="text" id="item_${i}" placeholder="Estado o comentario del ítem ${i+1}">
+            </div>
+        `;
+    }
+
+    function mostrarSeccion(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function toggleLoading(show) {
+        document.getElementById('loading').style.display = show ? 'block' : 'none';
+    }
+
+    // INTENTO DE INGRESO AUTOMÁTICO AL ABRIR LA APP
+    window.addEventListener('DOMContentLoaded', () => {
+        verificarUsuarioGoogle();
+    });
+
+    // FUNCIÓN DE VERIFICACIÓN POR CUENTA DE GOOGLE RECUERDA SESIÓN
+    async function verificarUsuarioGoogle() {
+        toggleLoading(true);
+        try {
+            const url = `${WEB_APP_URL}?action=validarPin`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.ok) {
+                supervisorActual = data.usuario.nombre;
+                document.getElementById('txt-user').innerText = `Usuario: ${data.usuario.nombre} (${data.usuario.rol})`;
+                
+                if (data.usuario.rol.toLowerCase() === 'administrador') {
+                    document.getElementById('btn-adm-sup').style.display = 'block';
+                    document.getElementById('btn-adm-sitio').style.display = 'block';
+                } else {
+                    document.getElementById('btn-adm-sup').style.display = 'none';
+                    document.getElementById('btn-adm-sitio').style.display = 'none';
                 }
-                const user = dbSupervisores.find(u => u.pin === pin);
-                if (user) { usuarioLogueado = user; changeScreen('screen-empresas'); }
-                else { document.getElementById('login-error').style.display = "block"; document.getElementById('input-pin').value = ""; }
-            }
-        }
 
-        function selectEmpresa(empresa) {
-            empresaSeleccionada = empresa;
-            setGreeting();
-            document.getElementById('sup-name').innerText = `${usuarioLogueado.nombre} • ${empresa}`;
-            document.getElementById('profile-user').innerText = usuarioLogueado.nombre;
-            document.getElementById('profile-company').innerText = `Rol: ${usuarioLogueado.rol} | ${empresa}`;
-            
-            const isAdm = usuarioLogueado.rol.toLowerCase().trim() === "admin";
-            document.getElementById('btn-toggle-admin').style.display = isAdm ? "flex" : "none";
-            document.getElementById('panel-admin').style.display = "none";
-            document.getElementById('cv-box').style.display = "none";
-
-            actualizarListasSitios();
-            cargarHojaVidaYFoto();
-            changeScreen('screen-home');
-            switchTab('fichaje');
-        }
-
-        function cambiarFotoPerfil(input) {
-            if (input.files && input.files[0]) {
-                const lector = new FileReader();
-                lector.onload = function(e) {
-                    const base64 = e.target.result;
-                    document.getElementById('avatar-default').style.display = 'none';
-                    const img = document.getElementById('avatar-img');
-                    img.src = base64;
-                    img.style.display = 'block';
-                    localStorage.setItem(`avatar_${usuarioLogueado.nombre}`, base64);
-                }
-                lector.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function guardarHojaVida() {
-            const datos = {
-                legajo: document.getElementById('cv-legajo').value,
-                telefono: document.getElementById('cv-telefono').value,
-                domicilio: document.getElementById('cv-domicilio').value
-            };
-            localStorage.setItem(`cv_${usuarioLogueado.nombre}`, JSON.stringify(datos));
-            alert("✅ Hoja de Vida guardada con éxito.");
-            toggleSeccion('cv-box', 'arrow-cv'); // Se cierra al guardar de forma estética
-        }
-
-        function cargarHojaVidaYFoto() {
-            const fotoGuardada = localStorage.getItem(`avatar_${usuarioLogueado.nombre}`);
-            if (fotoGuardada) {
-                document.getElementById('avatar-default').style.display = 'none';
-                const img = document.getElementById('avatar-img');
-                img.src = fotoGuardada;
-                img.style.display = 'block';
+                await cargarSitios();
+                mostrarSeccion('sec-menu');
             } else {
-                document.getElementById('avatar-default').style.display = 'flex';
-                document.getElementById('avatar-img').style.display = 'none';
+                alert(data.msg || "Usuario no autorizado.");
             }
-
-            const cvGuardado = JSON.parse(localStorage.getItem(`cv_${usuarioLogueado.nombre}`));
-            document.getElementById('cv-legajo').value = cvGuardado?.legajo || "";
-            document.getElementById('cv-telefono').value = cvGuardado?.telefono || "";
-            document.getElementById('cv-domicilio').value = cvGuardado?.domicilio || "";
+        } catch (error) {
+            console.error(error);
+            alert("Por favor, presione el botón de ingreso para validar su cuenta Google.");
+        } finally {
+            toggleLoading(false);
         }
+    }
 
-        function toggleSeccion(idBox, idArrow) {
-            const box = document.getElementById(idBox);
-            const arrow = document.getElementById(idArrow);
-            if(box.style.display === "block") {
-                box.style.display = "none";
-                arrow.style.transform = "rotate(0deg)";
-            } else {
-                box.style.display = "block";
-                arrow.style.transform = "rotate(180deg)";
-            }
-        }
+    async function cargarSitios() {
+        try {
+            const url = `${WEB_APP_URL}?action=getSitios`;
+            const response = await fetch(url);
+            listaSitios = await response.json();
 
-        function filtrarSitios(modulo) {
-            const query = document.getElementById(`search-${modulo}`).value.toLowerCase();
-            const select = modulo === 'fichaje' ? document.getElementById('fichaje-sitio') : document.getElementById('field-sitio');
-            const filtrados = dbSitios.filter(s => s.empresa.toLowerCase() === empresaSeleccionada.toLowerCase() && s.sitio.toLowerCase().includes(query));
-            
-            select.innerHTML = '<option value="">Resultados...</option>';
-            filtrados.forEach(s => { select.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`; });
-        }
-
-        function actualizarListasSitios() {
-            const selects = [document.getElementById('fichaje-sitio'), document.getElementById('field-sitio')];
-            if(dbSitios.length === 0) return;
-            const base = dbSitios.filter(s => s.empresa.toLowerCase() === empresaSeleccionada.toLowerCase());
-            selects.forEach(sel => {
-                sel.innerHTML = '<option value="">Seleccione Objetivo...</option>';
-                base.forEach(s => { sel.innerHTML += `<option value="${s.sitio}">${s.sitio}</option>`; });
+            const selectores = document.querySelectorAll('.select-sitios');
+            selectores.forEach(select => {
+                select.innerHTML = '';
+                listaSitios.forEach(s => {
+                    let opt = document.createElement('option');
+                    opt.value = s.sitio;
+                    opt.innerText = `${s.sitio} (${s.empresa})`;
+                    select.appendChild(opt);
+                });
             });
+        } catch (error) {
+            console.error("Error cargando sitios: ", error);
         }
+    }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-            document.getElementById('tab-' + tabId).classList.add('active-tab');
-            document.getElementById('btn-tab-' + tabId).classList.add('active-nav');
-            
-            if(tabId === 'historial') renderHistorial();
-            if(tabId === 'informe') {
-                setTimeout(initFirmaCanvas, 250);
-            }
-        }
-
-        function registrarFichaje(tipo) {
-            const sitio = document.getElementById('fichaje-sitio').value;
-            if (!sitio) { alert("Seleccione objetivo."); return; }
-            const obs = document.getElementById('fichaje-observaciones').value;
-            const payload = {
-                tipo_registro: "fichaje", supervisor: `${usuarioLogueado.nombre} (${empresaSeleccionada})`,
-                sitio, accion: tipo, hora: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), observacionesFichaje: obs
-            };
-            fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-            .then(() => {
-                alert(`✅ ${tipo} registrado.`);
-                guardarHistorial(tipo, `${tipo} en: ${sitio}`, obs || "Sin novedades.");
-                document.getElementById('fichaje-observaciones').value = "";
-                if(tipo === 'Entrada') switchTab('informe');
+    async function enviarPost(payload, mensajeExito, seccionDestino = 'sec-menu') {
+        toggleLoading(true);
+        try {
+            const response = await fetch(WEB_APP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(payload)
             });
+            alert(mensajeExito);
+            mostrarSeccion(seccionDestino);
+        } catch (error) {
+            console.error(error);
+            alert("Error al enviar los datos.");
+        } finally {
+            toggleLoading(false);
+        }
+    }
+
+    function enviarFichaje() {
+        const payload = {
+            tipo_registro: "fichaje",
+            supervisor: supervisorActual,
+            sitio: document.getElementById('fichaje-sitio').value,
+            accion: document.getElementById('fichaje-accion').value,
+            hora: document.getElementById('fichaje-hora').value,
+            observacionesFichaje: document.getElementById('fichaje-obs').value
+        };
+        if(!payload.hora) return alert("Por favor defina una hora.");
+        enviarPost(payload, "¡Fichaje registrado con éxito!");
+    }
+
+    function enviarInforme() {
+        const payload = {
+            tipo_registro: "informe",
+            supervisor: supervisorActual,
+            sitio: document.getElementById('inf-sitio').value,
+            contacto: document.getElementById('inf-contacto').value,
+            horaIngreso: document.getElementById('inf-hora-ing').value,
+            horaEgreso: document.getElementById('inf-hora-egr').value,
+            estadoMateriales: document.getElementById('inf-est-mat').value,
+            estadoMaquinas: document.getElementById('inf-est-maq').value,
+            estadoUniforme: document.getElementById('inf-est-uni').value,
+            observaciones: document.getElementById('inf-obs').value,
+            novedades: document.getElementById('inf-nov').value,
+            serviciosComplementarios: document.getElementById('inf-serv').value
+        };
+
+        for (let i = 0; i < 9; i++) {
+            payload["item_" + i] = document.getElementById(`item_${i}`).value || "-";
         }
 
-        function validarFotos(input) {
-            if (input.files.length > 5) {
-                alert("⚠️ Solo se permiten hasta un máximo de 5 fotos por informe.");
-                input.value = "";
-                document.getElementById('photo-status').innerText = "0 de 5 fotos seleccionadas";
-            } else {
-                document.getElementById('photo-status').innerText = `${input.files.length} de 5 fotos seleccionadas`;
-            }
-        }
+        enviarPost(payload, "¡Informe enviado con éxito!");
+    }
 
-        function initFirmaCanvas() {
-            canvas = document.getElementById('signature-canvas');
-            if(!canvas) return;
-            ctx = canvas.getContext('2d');
-            
-            const contenedor = canvas.parentElement;
-            canvas.width = contenedor.clientWidth;
-            canvas.height = 180; 
-            
-            ctx.strokeStyle = "#0f172a";
-            ctx.lineWidth = 3;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
+    function altaSupervisor() {
+        const payload = {
+            tipo_registro: "nuevo_supervisor",
+            nombre: document.getElementById('add-sup-nombre').value,
+            pin: document.getElementById('add-sup-pin').value, 
+            rol: document.getElementById('add-sup-rol').value
+        };
+        if(!payload.nombre || !payload.pin) return alert("Complete todos los campos.");
+        enviarPost(payload, `Supervisor ${payload.nombre} creado.`);
+    }
 
-            function obtenerPosTouch(e) {
-                const rect = canvas.getBoundingClientRect();
-                const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
-                return {
-                    x: clienteX - rect.left,
-                    y: clienteY - rect.top
-                };
-            }
+    function altaSitio() {
+        const payload = {
+            tipo_registro: "nuevo_sitio",
+            sitio: document.getElementById('add-sitio-nombre').value,
+            empresa: document.getElementById('add-sitio-empresa').value
+        };
+        if(!payload.sitio || !payload.empresa) return alert("Complete todos los campos.");
+        enviarPost(payload, `Sitio ${payload.sitio} dado de alta.`);
+    }
 
-            canvas.addEventListener('touchstart', function(e) {
-                dibujando = true;
-                const pos = obtenerPosTouch(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-            }, { passive: false });
-
-            canvas.addEventListener('touchmove', function(e) {
-                if (!dibujando) return;
-                e.preventDefault(); 
-                const pos = obtenerPosTouch(e);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-            }, { passive: false });
-
-            canvas.addEventListener('touchend', function() {
-                dibujando = false;
-            });
-
-            canvas.addEventListener('mousedown', function(e) {
-                dibujando = true;
-                const pos = obtenerPosTouch(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-            });
-            canvas.addEventListener('mousemove', function(e) {
-                if (dibujando) {
-                    const pos = obtenerPosTouch(e);
-                    ctx.lineTo(pos.x, pos.y);
-                    ctx.stroke();
-                }
-            });
-            window.addEventListener('mouseup', function() {
-                dibujando = false;
-            });
-        }
-
-        function limpiarFirma() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function enviarReporte(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-enviar');
-            btn.innerText = "Enviando Control..."; btn.disabled = true;
-
-            const firmaBase64 = canvas.toDataURL();
-
-            const payload = {
-                tipo_registro: "informe",
-                supervisor: usuarioLogueado.nombre,
-                contacto: document.getElementById('field-contacto').value,
-                sitio: document.getElementById('field-sitio').value,
-                horaIngreso: document.getElementById('field-horaIngreso').value,
-                horaEgreso: document.getElementById('field-horaEgreso').value,
-                estadoMateriales: document.getElementById('field-estadoMateriales').value,
-                observaciones: document.getElementById('field-observaciones').value,
-                estadoMaquinas: document.getElementById('field-estadoMaquinas').value,
-                estadoUniforme: document.getElementById('field-estadoUniforme').value,
-                novedades: document.getElementById('field-novedades').value,
-                serviciosComplementarios: document.getElementById('field-serviciosComplementarios').value,
-                firmaCliente: firmaBase64
-            };
-
-            matrixItems.forEach((_, i) => {
-                payload[`item_${i}`] = document.querySelector(`input[name="item_${i}"]:checked`)?.value || "-";
-            });
-
-            fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-            .then(() => {
-                alert("✅ Control de Supervisor enviado con éxito.");
-                guardarHistorial('Informe', `Control: ${payload.sitio}`, payload.observaciones);
-                document.getElementById('form-limcorp').reset();
-                limpiarFirma();
-                document.getElementById('photo-status').innerText = "0 de 5 fotos seleccionadas";
-                switchTab('historial');
-            }).finally(() => { btn.innerText = "ENVIAR CONTROL FINAL"; btn.disabled = false; });
-        }
-
-        function addSupervisorAdmin() {
-            const nombre = document.getElementById('adm-sup-nombre').value;
-            const pin = document.getElementById('adm-sup-pin').value;
-            const rol = document.getElementById('adm-sup-rol').value;
-            if(!nombre || !pin) { alert("Complete los datos."); return; }
-            const payload = { tipo_registro: "nuevo_supervisor", nombre, pin, rol };
-            fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-            .then(() => {
-                alert("✅ Supervisor guardado con éxito.");
-                document.getElementById('adm-sup-nombre').value = ""; document.getElementById('adm-sup-pin').value = "";
-                cargarDatosEnSegundoPlano();
-                toggleSeccion('panel-admin', 'arrow-adm');
-            });
-        }
-
-        function addSitioAdmin() {
-            const sitio = document.getElementById('adm-sitio-nombre').value;
-            const empresa = document.getElementById('adm-sitio-empresa').value;
-            if(!sitio) { alert("Escriba el nombre del objetivo."); return; }
-            const payload = { tipo_registro: "nuevo_sitio", sitio, empresa };
-            fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-            .then(() => {
-                alert("✅ Objetivo guardado con éxito.");
-                document.getElementById('adm-sitio-nombre').value = "";
-                cargarDatosEnSegundoPlano();
-                toggleSeccion('panel-admin', 'arrow-adm');
-            });
-        }
-
-        function guardarHistorial(tipo, titulo, desc) {
-            const reg = { tipo, titulo, desc, hora: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), fecha: new Date().toLocaleDateString() };
-            historialLocal.unshift(reg);
-            localStorage.setItem('historial_recorridas', JSON.stringify(historialLocal));
-        }
-
-        function renderHistorial() {
-            const list = document.getElementById('history-list');
-            list.innerHTML = historialLocal.length ? "" : '<div style="text-align:center; padding:50px; color:#94a3b8;">Sin actividad reciente.</div>';
-            historialLocal.slice(0, 10).forEach(i => {
-                const cls = i.tipo === 'Entrada' ? 'fichaje-type' : (i.tipo === 'Salida' ? 'salida-type' : '');
-                list.innerHTML += `<div class="history-item ${cls}"><div class="history-meta"><span>📅 ${i.fecha}</span><span>⏱️ ${i.hora}</span></div><div class="history-title">${i.titulo}</div><div class="history-desc">${i.desc}</div></div>`;
-            });
-        }
-
-        function changeScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function setGreeting() {
-            const h = new Date().getHours();
-            const g = h < 12 ? "Buenos días" : (h < 20 ? "Buenas tardes" : "Buenas noches");
-            document.getElementById('greeting').innerText = g + " 👋";
-        }
-    </script>
+    function cerrarSesion() {
+        supervisorActual = "";
+        mostrarSeccion('sec-login');
+    }
+</script>
 </body>
 </html>
