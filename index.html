@@ -151,7 +151,7 @@
         <p style="text-align: center; font-size: 14px; color: #6b7280; margin-bottom: 20px;">
             Para evitar la suplantación de identidad, el sistema validará su cuenta oficial de Google asignada.
         </p>
-        <button onclick="verificarUsuarioGoogle()">Ingresar con mi cuenta de Google</button>
+        <button onclick="verificarUsuarioGoogle(true)">Ingresar con mi cuenta de Google</button>
     </div>
 
     <div id="sec-menu" class="section">
@@ -268,7 +268,7 @@
 </div>
 
 <script>
-    // URL ACTUALIZADA CON TU NUEVO ENLACE DE EJECUCIÓN
+    // TU URL DE EJECUCIÓN ACTUAL
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxKhKD5hm41t8TpZ0GfAcbUuxl0EVaZyETvYB1WSbOh9hEpjXzDS_nljBUIkjo2KCbv/exec";
 
     let supervisorActual = "";
@@ -294,13 +294,13 @@
         document.getElementById('loading').style.display = show ? 'block' : 'none';
     }
 
-    // INTENTO DE INGRESO AUTOMÁTICO AL ABRIR LA APP
+    // INTENTO DE INGRESO AUTOMÁTICO EN SILENCIO AL ABRIR LA APP
     window.addEventListener('DOMContentLoaded', () => {
-        verificarUsuarioGoogle();
+        verificarUsuarioGoogle(false); // false indica que intente de fondo sin alertar si falla
     });
 
-    // FUNCIÓN DE VERIFICACIÓN POR CUENTA DE GOOGLE RECUERDA SESIÓN
-    async function verificarUsuarioGoogle() {
+    // FUNCIÓN DE VERIFICACIÓN OPTIMIZADA (SÓLO CORREO AUTOMÁTICO)
+    async function verificarUsuarioGoogle(esManual) {
         toggleLoading(true);
         try {
             const url = `${WEB_APP_URL}?action=validarPin`;
@@ -322,11 +322,14 @@
                 await cargarSitios();
                 mostrarSeccion('sec-menu');
             } else {
-                alert(data.msg || "Usuario no autorizado.");
+                // Si el correo está explícitamente bloqueado o no registrado en la lista
+                if (esManual) alert(data.msg || "Usuario no autorizado.");
             }
         } catch (error) {
             console.error(error);
-            alert("Por favor, presione el botón de ingreso para validar su cuenta Google.");
+            // Ya no muestra el molesto cartel informativo al cargar automáticamente.
+            // Solo si el usuario hace clic al botón y falla la red, avisará.
+            if (esManual) alert("Error de conexión. Asegúrese de estar logueado en Google en su navegador.");
         } finally {
             toggleLoading(false);
         }
